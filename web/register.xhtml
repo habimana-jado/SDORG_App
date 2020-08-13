@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <!-- Required meta tags-->
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <!-- Title Page-->
+        <title>SDORG-University Registration</title>
+
+        <!-- Icons font CSS-->
+        <link href="registration_assets/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all"/>
+        <link href="registration_assets/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all"/>
+        <!-- Font special for pages-->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet"/>
+
+        <!-- Vendor CSS-->
+        <link href="registration_assets/vendor/select2/select2.min.css" rel="stylesheet" media="all"/>
+        <link href="registration_assets/vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all"/>
+
+        <!-- Main CSS-->
+        <link href="registration_assets/css/main.css" rel="stylesheet" media="all"/>
+    </h:head>
+    <h:body>
+        <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+            <div class="wrapper wrapper--w790">
+                <div class="card card-5">
+                    <div class="card-heading">
+                        <h2 class="title">University Registration Form</h2>
+                    </div>
+                    <div class="card-body">
+                        <h:form>
+                            <p:growl />
+                            <div class="form-row">
+                                <div class="name">University Name</div>
+                                <div class="value">
+                                    <div class="input-group">
+                                        <h:inputText class="input--style-5" value="#{registrationModel.university.name}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row m-b-55">
+                                <div class="name">Address</div>
+                                <div class="value">
+                                    <div class="row row-space">
+                                        <div class="col-2">
+                                            <div class="input-group-desc">
+                                                <h:inputText class="input--style-5" value="#{registrationModel.university.location}" />
+                                                <label class="label--desc">Location</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="input-group-desc">
+                                                <h:inputText class="input--style-5" value="#{registrationModel.university.poBox}" />
+                                                <label class="label--desc">P.O. Box</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="name">Email</div>
+                                <div class="value">
+                                    <div class="input-group">
+                                        <h:inputText class="input--style-5" value="#{registrationModel.university.email}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row m-b-55">
+                                <div class="name">Phone</div>
+                                <div class="value">
+                                    <div class="row row-refine">
+                                        <div class="col-3">
+                                            <div class="input-group-desc">
+                                                <h:inputText class="input--style-5" value="#{registrationModel.university.areaCode}" />
+                                                <label class="label--desc">Area Code</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-9">
+                                            <div class="input-group-desc">
+                                                <h:inputText class="input--style-5" value="#{registrationModel.university.phoneNumber}" />
+                                                <label class="label--desc">Phone Number</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="name">Picture</div>
+                                <div class="value">
+                                    <div class="input-group">
+                                        <p:fileUpload id="fileUpload" fileUploadListener="#{registrationModel.Upload}" mode="advanced" dragDropSupport="false"
+                                                      sizeLimit="1000000000000" fileLimit="1" invalidFileMessage="Invalid Image Type"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row m-b-55">
+                                <div class="name">Account</div>
+                                <div class="value">
+                                    <div class="row row-space">
+                                        <div class="col-2">
+                                            <div class="input-group-desc">
+                                                <h:inputText class="input--style-5" value="#{registrationModel.user.username}"/>
+                                                <label class="label--desc">Username</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="input-group-desc">
+                                                <h:inputText class="input--style-5" value="#{registrationModel.password}"/>
+                                                <label class="label--desc">Password</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h:commandButton class="btn btn--radius-2 btn--green" action="#{registrationModel.registerUniversity()}" value="Register"></h:commandButton>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jquery JS-->
+        <script src="registration_assets/vendor/jquery/jquery.min.js"></script>
+        <!-- Vendor JS-->
+        <script src="registration_assets/vendor/select2/select2.min.js"></script>
+        <script src="registration_assets/vendor/datepicker/moment.min.js"></script>
+        <script src="registration_assets/vendor/datepicker/daterangepicker.js"></script>
+
+        <!-- Main JS-->
+        <script src="registration_assets/js/global.js"></script>
+
+    </h:body>
+</html>
+

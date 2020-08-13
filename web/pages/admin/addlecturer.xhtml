@@ -1,0 +1,317 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta charset="UTF-8"/>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+        <title>SDORG</title>
+        <!-- Favicon-->
+        <link rel="icon" href="./../favicon.ico" type="image/x-icon"/>
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,subset=latin,cyrillic-ext" rel="stylesheet" type="text/css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css"/>
+
+        <!-- Bootstrap Core Css -->
+        <link href="./../plugins/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+
+        <!-- Waves Effect Css -->
+        <link href="./../plugins/node-waves/waves.css" rel="stylesheet" />
+
+        <!-- Animation Css -->
+        <link href="./../plugins/animate-css/animate.css" rel="stylesheet" />
+
+        <!-- Sweet Alert Css -->
+        <link href="./../plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+        <!-- Custom Css -->
+        <link href="./../css/style.css" rel="stylesheet"/>
+
+        <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+        <link href="./../css/themes/all-themes.css" rel="stylesheet" />
+    </h:head>
+    <h:body class="theme-blue">
+        <!-- Page Loader -->
+        <div class="page-loader-wrapper">
+            <div class="loader">
+                <div class="preloader">
+                    <div class="spinner-layer pl-red">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <p>Please wait...</p>
+            </div>
+        </div>
+        <!-- #END# Page Loader -->
+        <!-- Overlay For Sidebars -->
+        <div class="overlay"></div>
+        <!-- #END# Overlay For Sidebars -->
+        <!-- Search Bar -->
+
+        <!-- #END# Search Bar -->
+        <!-- Top Bar -->
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                    <a href="javascript:void(0);" class="bars"></a>
+                    <a class="navbar-brand" href="../../index.html">SDORG SYSTEM</a>
+                </div>
+
+            </div>
+        </nav>
+        <!-- #Top Bar -->
+        <section>
+            <!-- Left Sidebar -->
+            <aside id="leftsidebar" class="sidebar">
+                <!-- User Info -->
+                
+                <!-- User Info -->
+                <div class="user-info" >
+                    <div class="image">
+                        <img src="../../uploads/profile/#{adminModel.loggedInUser.admin.profilePicture}" width="48" height="48" alt="User" />
+                    </div>
+                    <div class="info-container">
+                        <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#{adminModel.loggedInUser.admin.firstName}</div>
+                        <div class="email" ></div>    
+                        <div class="btn-group user-helper-dropdown">
+                            <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a><i class="material-icons">input</i>
+                                        <h:form>
+                                            <h:commandButton class="btn btn-link" value="Sign Out" action="#{userModel.logout()}" />
+                                        </h:form></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- #User Info -->
+                <!-- Menu -->
+                <div class="menu" >
+                    <ul class="list">
+                        <li class="header">MENU</li>
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">home</i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="addfaculty.xhtml">
+                                <i class="material-icons">book</i>
+                                <span>Faculty/Department</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="addlecturer.xhtml">
+                                <i class="material-icons">school</i>
+                                <span>Add Lecturer</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="addstudent.xhtml">
+                                <i class="material-icons">group_add</i>
+                                <span>Add Student</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="lecturer.xhtml">
+                                <i class="material-icons">group</i>
+                                <span>Lecturer/Student</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- #Menu -->
+                <!-- Footer -->
+                <div class="legal">
+                    <div class="copyright">
+                        &copy; 2020 <a href="javascript:void(0);">Josue</a>.
+                    </div>
+                </div>
+                <!-- #Footer -->
+            </aside>
+            <!-- #END# Left Sidebar -->
+            <!-- Right Sidebar -->
+
+            <!-- #END# Right Sidebar -->
+        </section>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="block-header">
+                    <h2>
+                        REGISTRATION FORM
+                    </h2>
+                </div>
+                <!-- Advanced Form Example With Validation -->
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2 class="card-inside-title">
+                                    Lecturer Profile                                
+                                </h2>                            
+                            </div>
+                            <div class="body">                            
+                                <div class="row clearfix">
+                                    <h:form>
+                                        <p:growl />
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <h:inputText id="nid" value="#{adminModel.lecturer.nationalId}" class="form-control" required="true" requiredMessage="Please Fill National ID"/>
+                                                    <h:message for="nid" class="text text-danger" />
+                                                    <label>National ID</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <h:inputText id="name" value="#{adminModel.lecturer.firstName}" class="form-control" required="true" requiredMessage="Please Fill First Name"/>
+                                                    <h:message for="name" class="text text-danger" />
+                                                    <label>First Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <h:inputText id="lname" value="#{adminModel.lecturer.lastName}" class="form-control" required="true" requiredMessage="Please Fill Last Name"/>
+                                                    <h:message for="lname" class="text text-danger" />
+                                                    <label>Last Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+
+                                                    <h:selectOneMenu class="form-control" value="#{adminModel.gender}">
+                                                        <f:selectItem itemValue="Male" itemLabel="Male" />
+                                                        <f:selectItem itemValue="Female" itemLabel="Female" />
+                                                    </h:selectOneMenu>
+                                                    <label>Gender</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+
+                                                    <h:inputText id="email" value="#{adminModel.lecturer.email}" class="form-control" required="true" requiredMessage="Please Fill Email"/>
+                                                    <h:message for="email" class="text text-danger" />
+                                                    <label>Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+
+                                                    <p:inputMask mask="+999 999 999 999" id="phone" value="#{adminModel.lecturer.phone}" class="form-control" required="true" requiredMessage="Please Fill Phone Number"/>
+                                                    <h:message for="phone" class="text text-danger" />
+                                                    <label>Phone Number</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+
+                                                    <p:fileUpload  id="fileUpload"   fileUploadListener="#{adminModel.Upload}" mode="advanced" dragDropSupport="false"
+                                                                   sizeLimit="1000000000000" fileLimit="1" invalidFileMessage="Invalid Image Type"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <h:selectOneMenu class="form-control" value="#{adminModel.facultyId}">
+                                                        <f:selectItems value="#{adminModel.faculties}" var="r" itemValue="#{r.facultyId}" itemLabel="#{r.name}" />
+                                                    </h:selectOneMenu>
+                                                    <label>Faculty Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <h:inputText id="username" value="#{adminModel.user.username}" class="form-control" required="true" requiredMessage="Please Fill Username"/>
+                                                    <h:message for="username" class="text text-danger" />
+                                                    <label>Username</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <h:inputSecret id="password" value="#{adminModel.password}" class="form-control" required="true" requiredMessage="Please Fill Password"/>
+                                                    <h:message for="password" class="text text-danger" />
+                                                    <label>Password</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">                                         
+                                            <h:commandButton class="btn btn-primary" value="Register Lecturer" action="#{adminModel.registerLecturer()}"/>
+                                        </div>
+                                    </h:form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Input -->
+            </div>
+        </section>
+
+        <!-- Jquery Core Js -->
+        <script src="./../plugins/jquery/jquery.min.js"></script>
+
+        <!-- Bootstrap Core Js -->
+        <script src="./../plugins/bootstrap/js/bootstrap.js"></script>
+
+        <!-- Select Plugin Js -->
+        <script src="./../plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+        <!-- Slimscroll Plugin Js -->
+        <script src="./../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+        <!-- Jquery Validation Plugin Css -->
+        <script src="./../plugins/jquery-validation/jquery.validate.js"></script>
+
+        <!-- JQuery Steps Plugin Js -->
+        <script src="./../plugins/jquery-steps/jquery.steps.js"></script>
+
+        <!-- Sweet Alert Plugin Js -->
+        <script src="./../plugins/sweetalert/sweetalert.min.js"></script>
+
+        <!-- Waves Effect Plugin Js -->
+        <script src="./../plugins/node-waves/waves.js"></script>
+
+        <!-- Custom Js -->
+        <script src="./../js/admin.js"></script>
+        <script src="./../js/pages/forms/form-wizard.js"></script>
+
+        <!-- Demo Js -->
+        <script src="./../js/demo.js"></script>
+    </h:body>
+</html>
+
