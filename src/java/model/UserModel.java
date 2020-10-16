@@ -42,10 +42,14 @@ public class UserModel {
         if (user != null && user.getStatus().equals(EStatus.ACTIVE)) {
 
             switch (user.getUserType()) {
+                case SUPERADMIN:
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
+                    ec.redirect(ec.getRequestContextPath() + "/pages/superadmin/university.xhtml");
+                    return "pages/superadmin/university.xhtml?faces-redirect=true";
                 case ADMIN:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
-                    ec.redirect(ec.getRequestContextPath() + "/pages/admin/addfaculty.xhtml");
-                    return "pages/admin/addfaculty.xhtml?faces-redirect=true";
+                    ec.redirect(ec.getRequestContextPath() + "/pages/admin/dashboard.xhtml");
+                    return "pages/admin/dashboard.xhtml?faces-redirect=true";
                 case SECURITY:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
                     ec.redirect(ec.getRequestContextPath() + "/pages/security/visitors.xhtml");

@@ -4,7 +4,6 @@ package domain;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,9 +20,7 @@ import org.hibernate.annotations.FetchMode;
 public class Person implements Serializable {
     @Id
     private String nationalId;
-    @Column(nullable = false)
     private String firstName;
-    @Column(nullable = false)
     private String lastName;
     private String phone;
     private String email;

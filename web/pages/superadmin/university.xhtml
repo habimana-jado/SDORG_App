@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="UTF-8"/>
@@ -73,14 +74,11 @@
             <!-- Left Sidebar -->
             <aside id="leftsidebar" class="sidebar">
                 <!-- User Info -->
-                
-                <!-- User Info -->
                 <div class="user-info" >
                     <div class="image">
-                        <img src="../../uploads/profile/#{adminModel.loggedInUser.admin.profilePicture}" width="48" height="48" alt="User" />
                     </div>
                     <div class="info-container">
-                        <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#{adminModel.loggedInUser.admin.firstName}</div>
+                        <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#{superAdminModel.loggedInUser.username} </div>
                         <div class="email" ></div>    
                         <div class="btn-group user-helper-dropdown">
                             <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
@@ -102,40 +100,28 @@
                     <ul class="list">
                         <li class="header">MENU</li>
                         <li>
-                            <a href="dashboard.xhtml">
+                            <a href="#">
                                 <i class="material-icons">home</i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
                         <li>
-                            <a href="addfaculty.xhtml">
-                                <i class="material-icons">book</i>
-                                <span>Faculty/Department</span>
+                            <a href="addvisitor.xhtml">
+                                <i class="material-icons">person_pin</i>
+                                <span>Add Visitor</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="addlecturer.xhtml">
-                                <i class="material-icons">school</i>
-                                <span>Add Lecturer</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="addstudent.xhtml">
-                                <i class="material-icons">group_add</i>
-                                <span>Add Student</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="addsecurity.xhtml">
-                                <i class="material-icons">school</i>
-                                <span>Add Security</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="lecturer.xhtml">
+                            <a href="visitors.xhtml">
                                 <i class="material-icons">group</i>
-                                <span>Lecturer/Student</span>
+                                <span>All People</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="check-out.xhtml">
+                                <i class="material-icons">check_box</i>
+                                <span>Check-Out</span>
                             </a>
                         </li>
                     </ul>
@@ -159,67 +145,50 @@
             <div class="container-fluid">
                 <div class="block-header">
                     <h2>
-                        REGISTRATION FORM
+                        UNIVERSITIES
                     </h2>
                 </div>
-                <!-- Advanced Form Example With Validation -->
-                <div class="row clearfix">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="card">
-                            <div class="header">
-                                <h2 class="card-inside-title">
-                                    Lecturer Profile                                
-                                </h2>                            
+                <button type="button" class="btn btn-default waves-effect m-r-20" data-toggle="modal" data-target="#defaultModal">New University</button>
+
+                <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="defaultModalLabel">University Config</h4>
                             </div>
-                            <div class="body">                            
+                            <div class="modal-body">
                                 <div class="row clearfix">
                                     <h:form>
                                         <p:growl />
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <h:inputText id="nid" value="#{adminModel.lecturer.nationalId}" class="form-control" required="true" requiredMessage="Please Fill National ID"/>
+                                                    <h:inputText id="nid" class="form-control" value="#{superAdminModel.university.name}" required="true" requiredMessage="Please Fill University Name" />
                                                     <h:message for="nid" class="text text-danger" />
-                                                    <label>National ID</label>
+                                                    <label>University Name</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <h:inputText id="name" value="#{adminModel.lecturer.firstName}" class="form-control" required="true" requiredMessage="Please Fill First Name"/>
-                                                    <h:message for="name" class="text text-danger" />
-                                                    <label>First Name</label>
+                                                    <h:inputText class="form-control" value="#{superAdminModel.university.location}" required="true" requiredMessage="Please Fill Location" />
+                                                    <label class="label--desc">Location</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <h:inputText id="lname" value="#{adminModel.lecturer.lastName}" class="form-control" required="true" requiredMessage="Please Fill Last Name"/>
-                                                    <h:message for="lname" class="text text-danger" />
-                                                    <label>Last Name</label>
+                                                    <h:inputText class="form-control" value="#{superAdminModel.university.poBox}" required="true" requiredMessage="Please Fill University P.O Box" />
+                                                    <label class="label--desc">P.O. Box</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-
-                                                    <h:selectOneMenu class="form-control" value="#{adminModel.gender}">
-                                                        <f:selectItem itemValue="Male" itemLabel="Male" />
-                                                        <f:selectItem itemValue="Female" itemLabel="Female" />
-                                                    </h:selectOneMenu>
-                                                    <label>Gender</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-
-                                                    <h:inputText id="email" value="#{adminModel.lecturer.email}" class="form-control" required="true" requiredMessage="Please Fill Email"/>
-                                                    <h:message for="email" class="text text-danger" />
+                                                    <h:inputText class="form-control" value="#{superAdminModel.university.email}" required="true" requiredMessage="Please Fill University Email" />
                                                     <label>Email</label>
                                                 </div>
                                             </div>
@@ -227,70 +196,115 @@
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-
-                                                    <p:inputMask mask="+999 999 999 999" id="phone" value="#{adminModel.lecturer.phone}" class="form-control" required="true" requiredMessage="Please Fill Phone Number"/>
-                                                    <h:message for="phone" class="text text-danger" />
-                                                    <label>Phone Number</label>
+                                                    <h:inputText class="form-control" value="#{superAdminModel.university.areaCode}"  required="true" requiredMessage="Please Fill Area Code"/>
+                                                    <label class="label--desc">Area Code</label>
                                                 </div>
                                             </div>
-                                        </div>
-
+                                        </div>  
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-
-                                                    <p:fileUpload  id="fileUpload"   fileUploadListener="#{adminModel.Upload}" mode="advanced" dragDropSupport="false"
-                                                                   sizeLimit="1000000000000" fileLimit="1" invalidFileMessage="Invalid Image Type"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
-
+                                                    <h:inputText class="form-control" value="#{superAdminModel.university.phoneNumber}"  required="true" requiredMessage="Please Fill University Phone"/>
+                                                    <label class="label--desc">Phone Number</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>  
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <h:selectOneMenu class="form-control" value="#{adminModel.facultyId}">
-                                                        <f:selectItems value="#{adminModel.faculties}" var="r" itemValue="#{r.facultyId}" itemLabel="#{r.name}" />
-                                                    </h:selectOneMenu>
-                                                    <label>Faculty Name</label>
+                                                    <p:fileUpload id="fileUpload" fileUploadListener="#{superAdminModel.Upload}" mode="advanced" dragDropSupport="false"
+                                                                  sizeLimit="1000000000000" fileLimit="1" invalidFileMessage="Invalid Image Type"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
                                                 </div>
                                             </div>
-                                        </div>
-
+                                        </div>  
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <h:inputText id="username" value="#{adminModel.user.username}" class="form-control" required="true" requiredMessage="Please Fill Username"/>
-                                                    <h:message for="username" class="text text-danger" />
-                                                    <label>Username</label>
+                                                    <h:inputText class="form-control" value="#{superAdminModel.user.username}" required="true" requiredMessage="Please Fill Username"/>
+                                                    <label class="label--desc">Username</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>  
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <h:inputSecret id="password" value="#{adminModel.password}" class="form-control" required="true" requiredMessage="Please Fill Password"/>
-                                                    <h:message for="password" class="text text-danger" />
-                                                    <label>Password</label>
+                                                    <h:inputText class="form-control" value="#{superAdminModel.password}" required="true" requiredMessage="Please Fill Password"/>
+                                                    <label class="label--desc">Password</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>  
                                         <div class="text-center">                                         
-                                            <h:commandButton class="btn btn-primary" value="Register Lecturer" action="#{adminModel.registerLecturer()}"/>
+                                            <h:commandButton class="btn btn--radius-2 btn--green" action="#{superAdminModel.registerUniversity()}" value="Register"></h:commandButton>
                                         </div>
                                     </h:form>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- #END# Input -->
+
+                <!-- Advanced Form Example With Validation -->
+                <div style="padding-top: 10px;" class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h:form>
+                            <c:forEach items="#{superAdminModel.universities}" var="elements" varStatus="status" >
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="card">
+                                        <div>
+                                            <p:growl />
+                                            <fieldset>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <h4><label>University Name:</label> #{elements.name}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <img src="./../../uploads/profile/#{elements.profilePicture}" height="90px"  width="90px" />
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <h4><label>Email:</label> #{elements.email}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <h4><label>Phone:</label> #{elements.phoneNumber}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </h:form>
+                    </div>
+                </div>
+                <!-- #END# Advanced Form Example With Validation -->
             </div>
         </section>
 
+        <script>
+            function customExtender() {
+                this.cfg.grid = {
+                    background: '#FFF' //Set background to white
+                };
+            }
+        </script>
+
         <!-- Jquery Core Js -->
         <script src="./../plugins/jquery/jquery.min.js"></script>
-
+        
         <!-- Bootstrap Core Js -->
         <script src="./../plugins/bootstrap/js/bootstrap.js"></script>
 

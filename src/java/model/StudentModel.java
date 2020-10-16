@@ -1,13 +1,19 @@
 package model;
 
 import common.FileUpload;
+import dao.AccusationDao;
 import dao.DeviceDao;
 import dao.DeviceImageDao;
+import dao.MovementDao;
+import domain.Accusation;
 import domain.Device;
 import domain.DeviceImage;
 import domain.EMovementStatus;
+import domain.Movement;
 import domain.User;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -23,7 +29,50 @@ public class StudentModel {
     private List<DeviceImage> myDevices = new DeviceImageDao().findByPerson(loggedInUser.getStudent());
     private Device device = new Device();
     private List<String> chosenImage = new ArrayList<>();
+    private List<Accusation> accusations = new AccusationDao().findByStudent(loggedInUser.getStudent());
+    private Accusation accusation = new Accusation();
+    private Movement movement = new Movement();
+    private List<Movement> movements = new MovementDao().findByStudent(loggedInUser.getStudent());
+    private String movementId = new String();
+    private Movement chosenMovement = new Movement();
+    private String newDate = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
 
+    public void registerAccusation() {
+        try {
+            accusation.setStatus("Raised");
+            accusation.setMovement(chosenMovement);
+            accusation.setReportingPeriod(new Date());
+            new AccusationDao().register(accusation);
+            accusations = new AccusationDao().findByStudent(loggedInUser.getStudent());
+            accusation = new Accusation();
+
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Complaint Raised"));
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void resolveAccusation(Accusation accusation){
+        try {
+            accusation.setStatus("Resolved");
+            accusation.setResolvedPeriod(new Date());
+            new AccusationDao().update(accusation);
+            accusations = new AccusationDao().findByStudent(loggedInUser.getStudent());
+            
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Complaint Resolved"));
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void chooseMovement(Movement movement){
+        chosenMovement = movement;
+    }
+    
     public void registerStudentDevice() {
         try {
             if (chosenImage.isEmpty()) {
@@ -43,7 +92,7 @@ public class StudentModel {
                     new DeviceImageDao().register(deviceImage);
                 }
                 chosenImage.clear();
-                
+
                 FacesContext fc = FacesContext.getCurrentInstance();
                 fc.addMessage(null, new FacesMessage("Device Registered"));
             }
@@ -88,5 +137,62 @@ public class StudentModel {
     public void setMyDevices(List<DeviceImage> myDevices) {
         this.myDevices = myDevices;
     }
+
+    public List<Accusation> getAccusations() {
+        return accusations;
+    }
+
+    public void setAccusations(List<Accusation> accusations) {
+        this.accusations = accusations;
+    }
+
+    public Accusation getAccusation() {
+        return accusation;
+    }
+
+    public void setAccusation(Accusation accusation) {
+        this.accusation = accusation;
+    }
+
+    public Movement getMovement() {
+        return movement;
+    }
+
+    public void setMovement(Movement movement) {
+        this.movement = movement;
+    }
+
+    public List<Movement> getMovements() {
+        return movements;
+    }
+
+    public void setMovements(List<Movement> movements) {
+        this.movements = movements;
+    }
+
+    public String getMovementId() {
+        return movementId;
+    }
+
+    public void setMovementId(String movementId) {
+        this.movementId = movementId;
+    }
+
+    public Movement getChosenMovement() {
+        return chosenMovement;
+    }
+
+    public void setChosenMovement(Movement chosenMovement) {
+        this.chosenMovement = chosenMovement;
+    }
+
+    public String getNewDate() {
+        return newDate;
+    }
+
+    public void setNewDate(String newDate) {
+        this.newDate = newDate;
+    }
+    
 
 }

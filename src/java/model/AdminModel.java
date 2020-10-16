@@ -2,6 +2,7 @@ package model;
 
 import common.FileUpload;
 import common.PassCode;
+import dao.AccusationDao;
 import dao.DepartmentDao;
 import dao.DeviceDao;
 import dao.FacultyDao;
@@ -10,6 +11,7 @@ import dao.MovementDao;
 import dao.PersonDao;
 import dao.StaffDao;
 import dao.StudentDao;
+import dao.UniversityDao;
 import dao.UserDao;
 import domain.Department;
 import domain.Device;
@@ -25,13 +27,33 @@ import domain.Staff;
 import domain.Student;
 import domain.University;
 import domain.User;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+import org.primefaces.model.chart.PieChartModel;
 
 @ManagedBean
 @SessionScoped
@@ -67,7 +89,48 @@ public class AdminModel {
     private List<User> adminUsers = new UserDao().findByAccess(EUserType.ADMIN);
 //    private List<Movement> universityDevices = new ArrayList<>();
     private List<Movement> universityDevices = new MovementDao().findByUniversity(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN);
-    
+    private List<Movement> universityExitedDevices = new MovementDao().findByUniversity(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT);
+    private UploadedFile uploadedFile;
+    private String uploadedFileName = new String();
+    private PieChartModel pieModel1;
+    private PieChartModel pieModel2;
+    private String from;
+    private String to;
+
+    @PostConstruct
+    public void init() {
+        createPieModel1();
+    }
+
+    private void createPieModel1() {
+        pieModel1 = new PieChartModel();
+
+        pieModel2 = new PieChartModel();
+
+        pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatus(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN));
+        pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatus(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT));
+
+        pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatus(loggedInUser.getAdmin().getUniversity(), "Raised"));
+        pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatus(loggedInUser.getAdmin().getUniversity(), "Resolved"));
+
+        pieModel1.setTitle("Movements");
+        pieModel1.setLegendPosition("w");
+        pieModel1.setShadow(false);
+
+        pieModel2.setTitle("Complaints");
+        pieModel2.setLegendPosition("e");
+        pieModel2.setShadow(false);
+    }
+
+    public void searchMovementOut() throws ParseException {
+        universityExitedDevices = new MovementDao().findByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, from, to);
+    }
+
+    public void refresh() {
+        new MovementDao().findByUniversity(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN);
+        universityExitedDevices = new MovementDao().findByUniversity(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT);
+    }
+
     public void registerFaculty() {
         faculty.setUniversity(loggedInUser.getAdmin().getUniversity());
         new FacultyDao().register(faculty);
@@ -160,7 +223,7 @@ public class AdminModel {
                 user = new User();
                 lecturer = new Lecturer();
                 lecturers = new LecturerDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
-                
+
                 FacesContext fc = FacesContext.getCurrentInstance();
                 fc.addMessage(null, new FacesMessage("Lecturer Registered"));
             }
@@ -210,6 +273,177 @@ public class AdminModel {
 
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Account Disabled"));
+    }
+
+    public String UploadStudent(FileUploadEvent event) {
+        try {
+            uploadedFileName = UUID.randomUUID().toString().substring(1, 5) + event.getFile().getFileName();
+            readFile(event.getFile().getInputstream());
+            return uploadedFileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+
+    public String UploadLecturer(FileUploadEvent event) {
+        try {
+            uploadedFileName = UUID.randomUUID().toString().substring(1, 5) + event.getFile().getFileName();
+            readFileLecturer(event.getFile().getInputstream());
+            return uploadedFileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminModel.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    private void copyFile(String fileName, InputStream in, String concatinationPath) {
+        try {
+            OutputStream out = new FileOutputStream(new File(concatinationPath + fileName));
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            while ((read = in.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            in.close();
+            out.flush();
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void readFile(InputStream input) throws SQLException {
+        try {
+            List<Student> students = new ArrayList<>();
+            Workbook work = new XSSFWorkbook(input);
+            Sheet sheet = work.getSheetAt(0);
+            DataFormatter dataFormatter = new DataFormatter();
+            int rowNum = 0;
+            for (Row row : sheet) {
+
+                Student emp = new Student();
+                if (row.getRowNum() > 0) {
+                    int counter = 0;
+                    for (Cell cell : row) {
+                        String cellValue = dataFormatter.formatCellValue(cell);
+                        switch (counter) {
+                            case 0:
+                                emp.setNationalId(cellValue);
+                                counter++;
+                                break;
+                            case 1:
+                                System.out.println(cellValue);
+                                emp.setFirstName(cellValue);
+                                counter++;
+                                break;
+                            case 2:
+                                System.out.println(cellValue);
+                                emp.setLastName(cellValue);
+                                counter++;
+                                break;
+                            case 3:
+                                System.out.println(cellValue);
+                                if (cellValue.matches("Male")) {
+                                    emp.setGender(EGender.MALE);
+                                } else {
+                                    emp.setGender(EGender.FEMALE);
+                                }
+                                emp.setPersonType("Student");
+                                counter++;
+                                break;
+                            case 4:
+                                emp.setPhone(cellValue);
+                                counter++;
+                                break;
+                            case 5:
+                                emp.setEmail(cellValue);
+                                counter++;
+                                break;
+                            case 6:
+                                System.out.println(cellValue);
+                                emp.setProgram(cellValue);
+                                counter++;
+                                break;
+
+                        }
+                        Department chosenDept = new DepartmentDao().findOne(Department.class, departmentId);
+                        emp.setDepartment(chosenDept);
+                        System.out.println(emp.getNationalId() + "--" + emp.getFirstName() + "--" + emp.getLastName() + "--" + emp.getPhone());
+                        new StudentDao().register(emp);
+                    }
+                }
+                students = new StudentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(AdminModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void readFileLecturer(InputStream input) throws SQLException {
+        try {
+            Workbook work = new XSSFWorkbook(input);
+            Sheet sheet = work.getSheetAt(0);
+            DataFormatter dataFormatter = new DataFormatter();
+            int rowNum = 0;
+            for (Row row : sheet) {
+
+                Lecturer emp = new Lecturer();
+                if (row.getRowNum() > 0) {
+                    int counter = 0;
+                    for (Cell cell : row) {
+                        String cellValue = dataFormatter.formatCellValue(cell);
+                        switch (counter) {
+                            case 0:
+                                emp.setNationalId(cellValue);
+                                counter++;
+                                break;
+                            case 1:
+                                emp.setFirstName(cellValue);
+                                counter++;
+                                break;
+                            case 2:
+                                emp.setLastName(cellValue);
+                                counter++;
+                                break;
+                            case 3:
+                                if (cellValue.matches("Male")) {
+                                    emp.setGender(EGender.MALE);
+                                } else {
+                                    emp.setGender(EGender.FEMALE);
+                                }
+                                emp.setPersonType("Lecturer");
+                                counter++;
+                                break;
+                            case 4:
+                                emp.setPhone(cellValue);
+                                counter++;
+                                break;
+                            case 5:
+                                emp.setEmail(cellValue);
+                                counter++;
+                                break;
+                        }
+                        Faculty fac = new FacultyDao().findOne(Faculty.class, facultyId);
+                        emp.setFaculty(fac);
+                        new LecturerDao().register(lecturer);
+                        lecturers = new LecturerDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+                    }
+                }
+                students = new StudentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(AdminModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     public void Upload(FileUploadEvent event) {
@@ -446,6 +680,62 @@ public class AdminModel {
 
     public void setUniversityDevices(List<Movement> universityDevices) {
         this.universityDevices = universityDevices;
+    }
+
+    public UploadedFile getUploadedFile() {
+        return uploadedFile;
+    }
+
+    public void setUploadedFile(UploadedFile uploadedFile) {
+        this.uploadedFile = uploadedFile;
+    }
+
+    public String getUploadedFileName() {
+        return uploadedFileName;
+    }
+
+    public void setUploadedFileName(String uploadedFileName) {
+        this.uploadedFileName = uploadedFileName;
+    }
+
+    public PieChartModel getPieModel1() {
+        return pieModel1;
+    }
+
+    public void setPieModel1(PieChartModel pieModel1) {
+        this.pieModel1 = pieModel1;
+    }
+
+    public PieChartModel getPieModel2() {
+        return pieModel2;
+    }
+
+    public void setPieModel2(PieChartModel pieModel2) {
+        this.pieModel2 = pieModel2;
+    }
+
+    public List<Movement> getUniversityExitedDevices() {
+        return universityExitedDevices;
+    }
+
+    public void setUniversityExitedDevices(List<Movement> universityExitedDevices) {
+        this.universityExitedDevices = universityExitedDevices;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
     }
 
 }

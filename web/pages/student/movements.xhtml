@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="UTF-8"/>
@@ -32,6 +33,9 @@
 
         <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
         <link href="./../css/themes/all-themes.css" rel="stylesheet" />
+
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+
     </h:head>
     <h:body class="theme-blue">
         <!-- Page Loader -->
@@ -65,7 +69,7 @@
                     <a href="javascript:void(0);" class="bars"></a>
                     <a class="navbar-brand" href="../../index.html">SDORG SYSTEM</a>
                 </div>
-                
+
             </div>
         </nav>
         <!-- #Top Bar -->
@@ -86,9 +90,9 @@
                                 <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a><i class="material-icons">input</i>
-                                    <h:form>
-                                        <h:commandButton class="btn btn-link" value="Sign Out" action="#{userModel.logout()}" />
-                                    </h:form></a>
+                                        <h:form>
+                                            <h:commandButton class="btn btn-link" value="Sign Out" action="#{userModel.logout()}" />
+                                        </h:form></a>
                                 </li>
                             </ul>
                         </div>
@@ -150,89 +154,123 @@
             <div class="container-fluid">
                 <div class="block-header">
                     <h2>
-                        DEVICE REGISTRATION FORM
+                        My DEVICES MOVEMENTS
                     </h2>
                 </div>
+                <p:dialog header="Complain" id="dialog" widgetVar="dlg2" modal="true">
+                    <h:form>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group-inner">
+                                    <div class="row">
+                                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                            <label class="login2 pull-right pull-right-pro">#{studentModel.newDate}</label>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group-inner">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                            <label class="login2 pull-right pull-right-pro">Comment:</label>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                            <h:inputTextarea rows="7" value="#{studentModel.accusation.comment}" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-inner">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <p:commandButton class="btn btn-primary btn-sm" action="#{studentModel.registerAccusation()}" value="Register"></p:commandButton>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>  
+                    </h:form>
+                </p:dialog>
+
                 <!-- Advanced Form Example With Validation -->
                 <div class="row clearfix">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="card">
-                            <div class="header">
-                                <h2 class="card-inside-title">
-                                    Device Specifications                                
-                                </h2>                            
-                            </div>
-                            <div class="body">                            
-                                <div class="row clearfix">
-                                    <h:form>
-                                        <p:growl />
-                                        <div class="col-sm-12">
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <h:inputText id="nid" value="#{studentModel.device.serialNumber}" class="form-control" required="true" requiredMessage="Please Fill Guest National I.D"/>
-                                                    <h:message for="nid" class="text text-danger" />
-                                                    <label>Serial Number</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <h:inputText id="name" value="#{studentModel.device.deviceName}" class="form-control" required="true" requiredMessage="Please Fill Guest Name"/>
-                                                    <h:message for="name" class="text text-danger" />
-                                                    <label>Device Name</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    
-                                                    <h:selectOneMenu class="form-control" value="#{studentModel.device.deviceType}">
-                                                        <f:selectItem itemValue="Laptop" itemLabel="Laptop" />
-                                                        <f:selectItem itemValue="Phone" itemLabel="Phone" />
-                                                        <f:selectItem itemValue="Projector" itemLabel="Projector" />
-                                                    </h:selectOneMenu>
-                                                    <label>Gender</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    
-                                                    <h:inputTextarea rows="4" id="email" value="#{studentModel.device.specification}" class="form-control" required="true" requiredMessage="Please Fill Specifications"/>
-                                                    <h:message for="email" class="text text-danger" />
-                                                    <label>Specifications</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    
-                                                    <p:fileUpload id="fileUpload" fileUploadListener="#{studentModel.Upload}" mode="advanced" dragDropSupport="false"
-                                                                  sizeLimit="1000000000000" fileLimit="5" invalidFileMessage="Invalid Image Type"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
-                                                    <label>Profile</label>
-                                                </div>
-                                            </div>
-                                        </div>  
-                                        <div class="text-center">                                         
-                                            <h:commandButton class="btn btn-primary" value="Register Device" action="#{studentModel.registerStudentDevice()}"/>
-                                        </div>
-                                    </h:form>
-                                </div>
+                        <h:form>
+                            <c:forEach items="#{studentModel.movements}" var="elements" varStatus="status" >
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="card">
+                                        <div>
+                                            <p:growl />
+                                            <fieldset>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <h4><label>Device Name:</label> #{elements.device.deviceName}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <h4><label>Device Type:</label> #{elements.device.deviceType}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div>                                                        
+                                                            <h4><label>Status:</label> #{elements.movementStatus}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div>                                                        
+                                                            <h4><label>University:</label> #{elements.university.name}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div>                                                        
+                                                            <h4><label>Entrance:</label> #{elements.entranceTime}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div>                                                        
+                                                            <h4><label>Exit:</label> #{elements.exitTime}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> 
 
-                            </div>
-                        </div>
+                                                <div class="text-right">
+
+                                                    <p:commandButton oncomplete="PF('dlg2').show();" class="btn btn-primary" value="Complain" actionListener="#{studentModel.chooseMovement(elements)}" update=":dialog" > 
+                                                    </p:commandButton>
+
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </h:form>
                     </div>
                 </div>
-                <!-- #END# Input -->
+                <!-- #END# Advanced Form Example With Validation -->
             </div>
         </section>
 
         <!-- Jquery Core Js -->
-        <script src="./../plugins/jquery/jquery.min.js"></script>
+        <!--<script src="./../plugins/jquery/jquery.min.js"></script>-->
 
         <!-- Bootstrap Core Js -->
         <script src="./../plugins/bootstrap/js/bootstrap.js"></script>

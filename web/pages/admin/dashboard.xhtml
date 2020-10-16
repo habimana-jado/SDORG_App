@@ -99,28 +99,40 @@
                     <ul class="list">
                         <li class="header">MENU</li>
                         <li>
-                            <a href="lecturer.xhtml">
+                            <a href="dashboard.xhtml">
                                 <i class="material-icons">home</i>
-                                <span>Current Guest List</span>
+                                <span>Dashboard</span>
                             </a>
                         </li>
                         <li>
-                            <a href="guesthistory.xhtml">
-                                <i class="material-icons">home</i>
-                                <span>History Guest List</span>
+                            <a href="addfaculty.xhtml">
+                                <i class="material-icons">book</i>
+                                <span>Faculty/Department</span>
                             </a>
                         </li>
 
                         <li>
                             <a href="addlecturer.xhtml">
-                                <i class="material-icons">group_add</i>
-                                <span>Add Receptionist</span>
+                                <i class="material-icons">school</i>
+                                <span>Add Lecturer</span>
                             </a>
                         </li>
                         <li>
-                            <a href="receptionist.xhtml">
-                                <i class="material-icons">book</i>
-                                <span>Receptionist List</span>
+                            <a href="addstudent.xhtml">
+                                <i class="material-icons">group_add</i>
+                                <span>Add Student</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="addsecurity.xhtml">
+                                <i class="material-icons">school</i>
+                                <span>Add Security</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="lecturer.xhtml">
+                                <i class="material-icons">group</i>
+                                <span>Lecturer/Student</span>
                             </a>
                         </li>
                     </ul>
@@ -142,18 +154,28 @@
 
         <section class="content">
             <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p:chart type="pie" model="#{adminModel.pieModel1}" style="width:400px;height:300px" />                        
+                    </div>
+                    <div class="col-lg-6">
+                        <p:chart type="pie" model="#{adminModel.pieModel2}" style="width:400px;height:300px" />                        
+                    </div>
+                </div>
+
                 <div class="block-header">
                     <h2>
-                        ACCOUNTS LIST
+                        MOVEMENTS LIST
                     </h2>
                 </div>
                 <!-- Advanced Form Example With Validation -->
                 <div class="row clearfix">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <br />
                         <div class="card">
                             <div class="header">
                                 <h2 class="card-inside-title">
-                                    Staff Details                                
+                                    Checked-In Details                                
                                 </h2>                            
                             </div>
                             <div class="body">                            
@@ -165,30 +187,26 @@
                                                 <tr class="border-0">
                                                     <th class="border-0">#</th>
                                                     <th class="border-0">Name</th>
-                                                    <th class="border-0">Email</th>
-                                                    <th class="border-0">Phone</th>
-                                                    <th class="border-0">Status</th>
-                                                    <th class="border-0">Action</th>
+                                                    <th class="border-0">Type</th>
+                                                    <th class="border-0">Entrance Time</th>
+                                                    <th class="border-0">Owner</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach items="#{adminModel.adminUsers}" var="elements" varStatus="status">
+                                                <c:forEach items="#{adminModel.universityDevices}" var="elements" varStatus="status">
                                                     <tr>
                                                         <td>${status.index+1}</td>
                                                         <td>
-                                                            #{elements.staff.firstName} #{elements.staff.lastName}
+                                                            #{elements.device.deviceName}
                                                         </td>
                                                         <td>
-                                                            #{elements.staff.email}
+                                                            #{elements.device.deviceType}
                                                         </td>
                                                         <td>
-                                                            #{elements.staff.phone}
+                                                            #{elements.entranceTime}
                                                         </td>
                                                         <td>
-                                                            #{elements.status}
-                                                        </td>
-                                                        <td>
-                                                            <h:commandButton value="Disable" class="btn btn-danger" action="#{adminModel.disable(elements)}" />
+                                                            #{elements.device.person.firstName} #{elements.device.person.lastName}
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -204,38 +222,61 @@
                         <div class="card">
                             <div class="header">
                                 <h2 class="card-inside-title">
-                                    Lecturer Details                                
+                                    Checked-Out Details                                
                                 </h2>                            
                             </div>
                             <div class="body">                            
                                 <div class="row clearfix">
                                     <h:form>
                                         <p:growl />
+                                        <div class="row">
+                                            <div class="col-lg-1" />
+                                            <div class="col-lg-3">
+                                                <h:inputText value="#{adminModel.from}" class="form-control">
+                                                    <!--<f:convertDateTime pattern="dd/mm/yyyy" />-->
+                                                </h:inputText>
+                                            </div>
+                                            <div class="col-lg-1" />
+                                            <div class="col-lg-3">
+                                                <h:inputText value="#{adminModel.to}" class="form-control">
+                                                    <!--<f:convertDateTime pattern="dd/mm/yyyy" />-->
+                                                </h:inputText>       
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <h:commandButton class="btn btn-sm btn-success" action="#{adminModel.searchMovementOut()}" value="Search" />
+                                                <h:commandButton class="btn btn-sm btn-primary" action="#{adminModel.refresh()}" value="Refresh" />
+                                            </div>
+                                            <div class="col-lg-1" />
+                                        </div>
                                         <table class="table table-bordered table-striped table-hover dataTable">
                                             <thead class="bg-light">
                                                 <tr class="border-0">
                                                     <th class="border-0">#</th>
                                                     <th class="border-0">Name</th>
-                                                    <th class="border-0">Email</th>
-                                                    <th class="border-0">Phone</th>
-                                                    <th class="border-0">Status</th>
+                                                    <th class="border-0">Type</th>
+                                                    <th class="border-0">Entrance Time</th>
+                                                    <th class="border-0">Exit Time</th>
+                                                    <th class="border-0">Owner</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach items="#{adminModel.lecturerUsers}" var="elements" varStatus="status">
+                                                <c:forEach items="#{adminModel.universityExitedDevices}" var="elements" varStatus="status">
                                                     <tr>
                                                         <td>${status.index+1}</td>
                                                         <td>
-                                                            #{elements.lecturer.firstName} #{elements.lecturer.lastName}
+                                                            #{elements.device.deviceName}
                                                         </td>
                                                         <td>
-                                                            #{elements.lecturer.email}
+                                                            #{elements.device.deviceType}
                                                         </td>
                                                         <td>
-                                                            #{elements.lecturer.phone}
+                                                            #{elements.entranceTime}
                                                         </td>
                                                         <td>
-                                                            #{elements.status}
+                                                            #{elements.exitTime}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.device.person.firstName} #{elements.device.person.lastName}
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -247,60 +288,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="card">
-                            <div class="header">
-                                <h2 class="card-inside-title">
-                                    Student Details                                
-                                </h2>                            
-                            </div>
-                            <div class="body">                            
-                                <div class="row clearfix">
-                                    <h:form>
-                                        <p:growl />
-                                        <table class="table table-bordered table-striped table-hover dataTable">
-                                            <thead class="bg-light">
-                                                <tr class="border-0">
-                                                    <th class="border-0">#</th>
-                                                    <th class="border-0">Name</th>
-                                                    <th class="border-0">Email</th>
-                                                    <th class="border-0">Phone</th>
-                                                    <th class="border-0">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:forEach items="#{adminModel.studentUsers}" var="elements" varStatus="status">
-                                                    <tr>
-                                                        <td>${status.index+1}</td>
-                                                        <td>
-                                                            #{elements.student.firstName} #{elements.student.lastName}
-                                                        </td>
-                                                        <td>
-                                                            #{elements.student.email}
-                                                        </td>
-                                                        <td>
-                                                            #{elements.student.phone}
-                                                        </td>
-                                                        <td>
-                                                            #{elements.status}
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </h:form>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
                 <!-- #END# Input -->
             </div>
         </section>
 
         <!-- Jquery Core Js -->
-        <script src="./../plugins/jquery/jquery.min.js"></script>
+        <!--<script src="./../plugins/jquery/jquery.min.js"></script>-->
 
         <!-- Bootstrap Core Js -->
         <script src="./../plugins/bootstrap/js/bootstrap.js"></script>
