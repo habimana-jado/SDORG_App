@@ -18,9 +18,13 @@ import domain.Movement;
 import domain.Person;
 import domain.User;
 import domain.Visitor;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -43,7 +47,15 @@ public class SecurityModel {
     private List<Person> persons = new PersonDao().findAll(Person.class);
     private DeviceImage chosenDeviceImage = new DeviceImage();
     private List<Movement> universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
-    
+    private List<Movement> alertedDevices = new ArrayList<>();
+
+    @PostConstruct
+    public void init() {
+        loggedInUser = (User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
+        universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
+        check24HAlert();
+    }
+
     public void registerVisitor() throws Exception {
 
         if (gender.matches("Male")) {
@@ -66,6 +78,38 @@ public class SecurityModel {
 
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Visitor Registered"));
+    }
+
+    public void check24HAlert() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date d1 = null;
+        long diff;
+        long diffSeconds;
+        try {
+            String strDate = sdf.format(new Date());
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(sdf.parse(strDate));
+            cal.add(Calendar.HOUR_OF_DAY, 24);
+            System.out.println("Time:   "+cal.getTime());
+            System.out.println("Time Formatted:  "+sdf.format(cal.getTime()));
+            String t1 = sdf.format(cal.getTime());
+            System.out.println("Date Formatted:  "+sdf.parse(t1));
+            Date d2 = sdf.parse(t1);
+            alertedDevices.clear();
+            for (Movement m : universityDevices) {
+//                d1 = sdf.parse(m.getEntranceTime().toString());
+//                System.out.println("Date 1: " + d1);
+                    d1 = m.getEntranceTime();
+                    diff = d2.getTime() - d1.getTime();
+                diffSeconds = diff / 1000;
+                System.out.println("D2 = "+d2+"D1 = "+d1+"Difference = " + diffSeconds+ "Device "+m.getDevice().getDeviceName());
+                if (diffSeconds > 86400) {
+                    alertedDevices.add(m);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String navigateToRegisterVisitorDevice(Person person) {
@@ -114,28 +158,28 @@ public class SecurityModel {
         movement.setMovementStatus(EMovementStatus.CHECKED_IN);
         movement.setUniversity(loggedInUser.getStaff().getUniversity());
         new MovementDao().register(movement);
-        
+
         Device device = chosenDeviceImage.getDevice();
         device.setMovementStatus(EMovementStatus.CHECKED_IN);
         new DeviceDao().update(device);
-        
+
         visitorDevices = new DeviceImageDao().findByPerson(chosenPerson);
         universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
-        
+
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Device Checked-In"));
     }
-    
-    public void checkOutDevice(Movement movement){
+
+    public void checkOutDevice(Movement movement) {
         movement.setExitTime(new Date());
         movement.setMovementStatus(EMovementStatus.CHECKED_OUT);
         new MovementDao().update(movement);
-        
+
         Device device = movement.getDevice();
         device.setMovementStatus(EMovementStatus.CHECKED_OUT);
         new DeviceDao().update(device);
         universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
-        
+
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Device Checked-Out"));
     }
@@ -238,6 +282,14 @@ public class SecurityModel {
 
     public void setUniversityDevices(List<Movement> universityDevices) {
         this.universityDevices = universityDevices;
+    }
+
+    public List<Movement> getAlertedDevices() {
+        return alertedDevices;
+    }
+
+    public void setAlertedDevices(List<Movement> alertedDevices) {
+        this.alertedDevices = alertedDevices;
     }
 
 }
