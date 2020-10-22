@@ -3,6 +3,7 @@ package dao;
 
 import domain.Accusation;
 import domain.Department;
+import domain.Device;
 import domain.EMovementStatus;
 import domain.Student;
 import domain.University;
@@ -20,6 +21,16 @@ public class AccusationDao extends GenericDao<Accusation>{
         return u;
     }
     
+    public Accusation findByDeviceAndStatus(Device de){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Accusation a WHERE a.movement.device = :x AND a.status = :st");
+        q.setParameter("x", de);
+        q.setParameter("st", "Raised");
+        Accusation u = (Accusation) q.uniqueResult();
+        s.close();
+        return u;
+    }
+    
     public Long findTotalByUniversityAndMovementStatus(University x, String status){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT COUNT(a.accusationId) FROM Accusation a WHERE a.movement.university = :x AND a.status = :y");
@@ -29,4 +40,5 @@ public class AccusationDao extends GenericDao<Accusation>{
         s.close();
         return list;
     }
+    
 }

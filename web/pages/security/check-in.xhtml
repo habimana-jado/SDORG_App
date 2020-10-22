@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <meta charset="UTF-8"/>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
@@ -150,6 +151,20 @@
                 </div>
                 <!-- Horizontal Layout -->
                 <div class="row clearfix">
+                    <c:choose>
+                        <c:when test="#{securityModel.chosenAccusation eq ''}">
+                            <div class="alert alert-success" role="alert">
+                                #{securityModel.alertMessage}
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="alert alert-danger" role="alert">
+                                #{securityModel.alertMessage}
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+
+
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <div class="card">
                             <div class="header">
@@ -195,24 +210,26 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="row clearfix">
                                         <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                                            <h:commandButton value="Submit" action="#{securityModel.checkInDevice()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
+                                            <h:commandButton rendered="#{securityModel.alerted}" value="Submit" action="#{securityModel.checkInDevice()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
                                         </div>
                                     </div>
+
                                 </h:form>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <div class="card">
-                            <div class="header">
-                                <h2>
-                                    Visitor Info
-                                </h2>
-                            </div>
-                            <div class="body">
-                                <h:form class="form-horizontal">
+                        <h:form class="form-horizontal">
+                            <div class="card">
+                                <div class="header">
+                                    <h2>
+                                        Visitor Info
+                                    </h2>
+                                </div>
+                                <div class="body">
                                     <div class="row clearfix">
                                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
                                             <label>National ID</label>
@@ -261,9 +278,109 @@
                                             </div>
                                         </div>
                                     </div>
-                                </h:form>
+                                </div>
                             </div>
-                        </div>
+                        </h:form>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h:form class="form-horizontal" rendered="#{securityModel.alerted}">
+                            <div class="card">
+                                <div class="header">
+                                    <h2>
+                                        Complaint Info
+                                    </h2>
+                                </div>
+                                <div class="body">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Period Reported</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.reportingPeriod}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Comment</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.comment}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Device Registration Date</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.movement.device.registrationDate}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h:form class="form-horizontal" rendered="#{securityModel.alerted}">
+                            <div class="card">
+                                <div class="header">
+                                    <h2>
+                                        Device-Owner Info
+                                    </h2>
+                                </div>
+                                <div class="body">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Names</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.movement.device.person.firstName} #{securityModel.chosenAccusation.movement.device.person.lastName}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Phone</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.movement.device.person.phone}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Email</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.movement.device.person.email}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
                     </div>
                 </div>
                 <!-- #END# Input -->

@@ -118,4 +118,8 @@ public class Device implements Serializable{
         this.person = person;
     }
 
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
 }

@@ -2,12 +2,14 @@ package model;
 
 import common.FileUpload;
 import common.PassCode;
+import dao.AccusationDao;
 import dao.DeviceDao;
 import dao.DeviceImageDao;
 import dao.MovementDao;
 import dao.PersonDao;
 import dao.UserDao;
 import dao.VisitorDao;
+import domain.Accusation;
 import domain.Device;
 import domain.DeviceImage;
 import domain.EGender;
@@ -48,7 +50,10 @@ public class SecurityModel {
     private DeviceImage chosenDeviceImage = new DeviceImage();
     private List<Movement> universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
     private List<Movement> alertedDevices = new ArrayList<>();
-
+    private String alertMessage = "This device is free to enter";
+    private Accusation chosenAccusation = new Accusation();
+    private boolean alerted = Boolean.FALSE;
+    
     @PostConstruct
     public void init() {
         loggedInUser = (User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
@@ -89,20 +94,15 @@ public class SecurityModel {
             String strDate = sdf.format(new Date());
             Calendar cal = new GregorianCalendar();
             cal.setTime(sdf.parse(strDate));
-            cal.add(Calendar.HOUR_OF_DAY, 24);
-            System.out.println("Time:   "+cal.getTime());
-            System.out.println("Time Formatted:  "+sdf.format(cal.getTime()));
+//            cal.add(Calendar.HOUR_OF_DAY, 24);
             String t1 = sdf.format(cal.getTime());
-            System.out.println("Date Formatted:  "+sdf.parse(t1));
             Date d2 = sdf.parse(t1);
             alertedDevices.clear();
             for (Movement m : universityDevices) {
 //                d1 = sdf.parse(m.getEntranceTime().toString());
-//                System.out.println("Date 1: " + d1);
                     d1 = m.getEntranceTime();
                     diff = d2.getTime() - d1.getTime();
                 diffSeconds = diff / 1000;
-                System.out.println("D2 = "+d2+"D1 = "+d1+"Difference = " + diffSeconds+ "Device "+m.getDevice().getDeviceName());
                 if (diffSeconds > 86400) {
                     alertedDevices.add(m);
                 }
@@ -120,6 +120,15 @@ public class SecurityModel {
 
     public String navigateToDevice(DeviceImage device) {
         chosenDeviceImage = device;
+        chosenAccusation = new AccusationDao().findByDeviceAndStatus(device.getDevice());
+        if(chosenAccusation == null){
+            alertMessage = "This device is free to enter";
+            alerted = Boolean.FALSE;
+        }else{
+            alertMessage = "This device is alerted in Complaints";
+            alerted = Boolean.TRUE;
+        }
+        System.out.println(alertMessage);
         return "check-in.xhtml?faces-redirect=true";
     }
 
@@ -290,6 +299,30 @@ public class SecurityModel {
 
     public void setAlertedDevices(List<Movement> alertedDevices) {
         this.alertedDevices = alertedDevices;
+    }
+
+    public String getAlertMessage() {
+        return alertMessage;
+    }
+
+    public void setAlertMessage(String alertMessage) {
+        this.alertMessage = alertMessage;
+    }
+
+    public Accusation getChosenAccusation() {
+        return chosenAccusation;
+    }
+
+    public void setChosenAccusation(Accusation chosenAccusation) {
+        this.chosenAccusation = chosenAccusation;
+    }
+
+    public boolean isAlerted() {
+        return alerted;
+    }
+
+    public void setAlerted(boolean alerted) {
+        this.alerted = alerted;
     }
 
 }
