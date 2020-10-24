@@ -1,96 +1,478 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough" >
+    
     <h:head>
-        <title>Login</title>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <!--===============================================================================================-->	
-        <link rel="icon" type="image/png" href="Login_v1/images/icons/favicon.ico"/>
-        <!--===============================================================================================-->
-        <link rel="stylesheet" type="text/css" href="Login_v1/vendor/bootstrap/css/bootstrap.min.css"/>
-        <!--===============================================================================================-->
-        <link rel="stylesheet" type="text/css" href="Login_v1/fonts/font-awesome-4.7.0/css/font-awesome.min.css"/>
-        <!--===============================================================================================-->
-        <link rel="stylesheet" type="text/css" href="Login_v1/vendor/animate/animate.css"/>
-        <!--===============================================================================================-->	
-        <link rel="stylesheet" type="text/css" href="Login_v1/vendor/css-hamburgers/hamburgers.min.css"/>
-        <!--===============================================================================================-->
-        <link rel="stylesheet" type="text/css" href="Login_v1/vendor/select2/select2.min.css"/>
-        <!--===============================================================================================-->
-        <link rel="stylesheet" type="text/css" href="Login_v1/css/util.css"/>
-        <link rel="stylesheet" type="text/css" href="Login_v1/css/main.css"/>
-        <!--===============================================================================================-->
+        <!-- Basic -->
+        <meta charset="utf-8"/>
+
+        <title>SDORG System</title>
+        <meta name="keywords" content="HTML5 Theme" />
+        <meta name="description" content="SDORG System"/>
+        <meta name="author" content="Esperance Izibyose"/>
+
+        <!-- Web Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i|Montserrat:400,700" rel="stylesheet"/>
+
+        <!-- Vendor Styles -->
+        <link href="SDORG HomePage/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="SDORG HomePage/vendor/themify/themify.css" rel="stylesheet" type="text/css"/>
+        <link href="SDORG HomePage/vendor/scrollbar/scrollbar.min.css" rel="stylesheet" type="text/css"/>
+        <link href="SDORG HomePage/vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css"/>
+        <link href="SDORG HomePage/vendor/swiper/swiper.min.css" rel="stylesheet" type="text/css"/>
+
+        <!-- Theme Styles -->
+        <link href="SDORG HomePage/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="SDORG HomePage/css/global/global.css" rel="stylesheet" type="text/css"/>
+
+        <!-- SDORGSysIcon -->
+        <link rel="shortcut icon" href="SDORG HomePage/img/SDORG_Cicle_Logo.png"/>
+
+        <!-- Preloader Style -->
+        <link rel="stylesheet" href="SDORG HomePage/css/preloader/bootstrap.min.css"/>
+        <link rel="stylesheet" href="SDORG HomePage/css/preloader/style.css"/>
+
+        <!-- Login Styles -->
+        <link href="SDORG HomePage/css/dropdownStyle.css" rel="stylesheet" type="text/css"/>
+        <!-- Login js -->
+
+        <script type="text/javascript"></script>
 
     </h:head>
     <h:body>
 
-        <div class="limiter">
-            <div class="container-login100">
-                <div class="wrap-login100">
-                    <div class="login100-pic js-tilt" data-tilt="true">
-                        <img src="Login_v1/images/img-01.png" alt="IMG"/>
+
+        <!-- Preloader Start -->
+        <!--    <div id="preloader-active">
+                <div class="preloader d-flex align-items-center justify-content-center">
+                    <div class="preloader-inner position-relative">
+                        <div class="preloader-circle"></div>
+                        <div class="preloader-img pere-text">
+                            <img src="SDORG HomePage/img/SDORG_Cicle_Logo.png" alt=""/>
+                        </div>
                     </div>
+                </div>
+            </div>-->
+        <!-- Preloader Start -->
 
-                    <h:form class="login100-form validate-form">
-                        <p:growl />
-                        <span class="login100-form-title">
-                            Member Login
-                        </span>
 
-                        <div class="wrap-input100 validate-input" data-validate = "Valid username is required">
-                            <h:inputText class="input100" value="#{userModel.username}" pt:placeholder="Username" />
-                            <span class="focus-input100"></span>
-                            <span class="symbol-input100">
-                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                            </span>
+        <!--========== HEADER ==========-->
+        <header class="navbar-fixed-top s-header js__header-sticky js__header-overlay">
+            <!-- Navbar -->
+            <div class="s-header__navbar">
+                <nav>
+                    <section>
+                        <aside class="Loggin">
+                            <div class="logging-btn">
+                                <a href="#" id="logging"><img src="SDORG HomePage/img/SDORG_LogIN_Btn.png"/></a>
+                            </div>
+                            <div class="arrow-up"></div>
+                        </aside>
+                        <div class="login-form">
+                            <h:form>
+                                <center>
+                                    <img src="SDORG HomePage/img/LoginUser.png"/><br/>
+                                    
+                                    <label>EXISTING USER</label><br/>
+                                    
+                                    <h:inputText value="#{userModel.username}" a:placeholder="Username" required="true" class="form-control g-radius--10" style="width: 90%"></h:inputText><br/>
+                                    
+                                    <h:inputSecret value="#{userModel.password}" a:placeholder="Password" required="true" class="form-control g-radius--10" style="width: 90%"></h:inputSecret><br/>
+                                    
+                                    <h:commandButton action="#{userModel.login()}" class="btn btn-success" value="SIGN IN"></h:commandButton><br/>
+                                    <h6>
+                                        <input type="checkbox" style="position: relative; right: 2px; top: 2px;">Remember me</input> | <a href="#" style="position: relative; left: 5px;">Forget Password?</a>
+                                    </h6>
+                                    <a href="#"><img src="SDORG HomePage/img/SIGN-UP.png"/></a>
+                                </center>
+                            </h:form>
+                        </div>
+                    </section>
+                </nav>
+
+                <div class="s-header__container">
+                    <div class="s-header__navbar-row">
+                        <div class="s-header__navbar-row-col">
+                            <!-- Logo -->
+                            <div class="s-header__logo">
+                                <a href="index.html" class="s-header__logo-link">
+                                    <img class="s-header__logo-img s-header__logo-img-default" src="SDORG HomePage/img/SDORG_rect_W_Logo_Size.png" alt="SDORG Logo" title="System of Securing Devices of ORGanizations"/>
+                                    <img class="s-header__logo-img s-header__logo-img-shrink" src="SDORG HomePage/img/SDORG_rect_W_Logo_Size.png" alt="SDORG Logo" title="System of Securing Devices of ORGanizations"/>
+                                </a>
+                            </div>
+                            <!-- End Logo -->
                         </div>
 
-                        <div class="wrap-input100 validate-input" data-validate = "Password is required">
-                            <h:inputSecret class="input100" value="#{userModel.password}" pt:placeholder="Password" />
-                            <span class="focus-input100"></span>
-                            <span class="symbol-input100">
-                                <i class="fa fa-lock" aria-hidden="true"></i>
-                            </span>
-                        </div>
 
-                        <div class="container-login100-form-btn">
-                            <h:commandButton class="login100-form-btn" value="Sign In" action="#{userModel.login()}"></h:commandButton>
-                        </div>
-
-                        <div class="text-center p-t-12">
-                            <span class="txt1">
-                                <!--Forgot-->
-                            </span>
-                            <a class="txt2" href="#">
-                                <!--Username / Password?-->
+                        <div class="s-header__navbar-row-col">
+                            <!-- Trigger -->
+                            <a href="javascript:void(0);" class="s-header__trigger js__trigger" id="trigz">
+                                <span class="s-header__trigger-icon"></span>
+                                <svg x="0rem" y="0rem" width="3.125rem" height="3.125rem" viewbox="0 0 54 54">
+                                    <circle fill="transparent" stroke="#fff" stroke-width="2" cx="27" cy="27" r="25" stroke-dasharray="157 157" stroke-dashoffset="157"></circle>
+                                </svg>
                             </a>
+                            <!-- End Trigger -->
                         </div>
-
-                    </h:form>
+                    </div>
                 </div>
             </div>
-        </div>
+            <!-- End Navbar -->
 
-        <!--===============================================================================================-->	
-        <script src="Login_v1/vendor/jquery/jquery-3.2.1.min.js"></script>
-        <!--===============================================================================================-->
-        <script src="Login_v1/vendor/bootstrap/js/popper.js"></script>
-        <script src="Login_v1/vendor/bootstrap/js/bootstrap.min.js"></script>
-        <!--===============================================================================================-->
-        <script src="Login_v1/vendor/select2/select2.min.js"></script>
-        <!--===============================================================================================-->
-        <script src="Login_v1/vendor/tilt/tilt.jquery.min.js"></script>
-        <script >
-            $('.js-tilt').tilt({
-                scale: 1.1
+            <!-- Overlay -->
+            <div class="s-header-bg-overlay js__bg-overlay">
+                <!-- Nav -->
+                <nav class="s-header__nav js__scrollbar">
+                    <div class="container-fluid">
+                        <!-- Menu List -->                                
+                        <ul class="list-unstyled s-header__nav-menu">
+                            <li class="s-header__nav-menu-item"><a class="s-header__nav-menu-link s-header__nav-menu-link-divider" href="index.xhtml">HOME</a></li>
+
+                            <li class="s-header__nav-menu-item"><a class="s-header__nav-menu-link s-header__nav-menu-link-divider" href="#">Tutorial</a></li>
+
+                            <li class="s-header__nav-menu-item"><a class="s-header__nav-menu-link s-header__nav-menu-link-divider" href="#abt">About US</a></li>
+
+                            <li class="s-header__nav-menu-item"><a class="s-header__nav-menu-link s-header__nav-menu-link-divider" href="#ContactUS" id="btnContact">Contact US</a></li>
+
+                        </ul>
+                        <!-- End Menu List -->
+
+
+                    </div>
+                </nav>
+                <!-- End Nav -->
+
+                <!-- Action -->
+                <ul class="list-inline s-header__action s-header__action--lb">
+                    <li class="s-header__action-item"><a class="s-header__action-link -is-active" href="#">© SDORG</a></li>
+
+                </ul>
+                <!-- End Action -->
+
+                <!-- Action -->
+                <ul class="list-inline s-header__action s-header__action--rb">
+                    <li class="s-header__action-item">
+                        <a class="s-header__action-link" href="https://web.facebook.com/SDORG-Sys-107625291104688" target="_blank">
+                            <i class="g-padding-r-5--xs ti-facebook"></i>
+                            <span class="g-display-none--xs g-display-inline-block--sm">Facebook</span>
+                        </a>
+                    </li>
+                    <li class="s-header__action-item">
+                        <a class="s-header__action-link" href="https://twitter.com/SdorgSys?s=08" target="_blank">
+                            <i class="g-padding-r-5--xs ti-twitter"></i>
+                            <span class="g-display-none--xs g-display-inline-block--sm">Twitter</span>
+                        </a>
+                    </li>
+                    <li class="s-header__action-item">
+                        <a class="s-header__action-link" href="https://www.instagram.com/sdorgsys/" target="_blank">
+                            <i class="g-padding-r-5--xs ti-instagram" ></i>
+                            <span class="g-display-none--xs g-display-inline-block--sm">Instagram</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- End Action -->
+            </div>
+            <!-- End Overlay -->
+        </header>
+        <!--========== END HEADER ==========-->
+
+        <!--========== SWIPER SLIDER ==========-->
+        <div class="s-swiper js__swiper-one-item">
+            <!-- Swiper Wrapper -->
+            <div class="swiper-wrapper">
+                <div class="g-fullheight--xs g-bg-position--center swiper-slide" style="background: url('SDORG HomePage/img/1920x1080/Image1.jpg');">
+                </div>
+                <div class="g-fullheight--xs g-bg-position--center swiper-slide" style="background: url('SDORG HomePage/img/1920x1080/Image2.jpg');">
+                </div>
+                <div class="g-fullheight--xs g-bg-position--center swiper-slide" style="background: url('SDORG HomePage/img/1920x1080/Image3.jpg');">
+                </div>
+            </div>
+            <!-- End Swiper Wrapper -->
+
+            <!-- Arrows -->
+            <a href="javascript:void(0);" class="s-swiper__arrow-v1--right s-icon s-icon--md s-icon--white-brd g-radius--circle ti-angle-right js__swiper-btn--next"></a>
+            <a href="javascript:void(0);" class="s-swiper__arrow-v1--left s-icon s-icon--md s-icon--white-brd g-radius--circle ti-angle-left js__swiper-btn--prev"></a>            
+            <!-- End Arrows -->
+
+            <a href="#MoreAboutSDORG" class="s-scroll-to-section-v1--bc g-margin-b-15--xs">
+                <span class="g-font-size-18--xs g-color--white ti-angle-double-down"></span>
+                <p class="text-uppercase g-color--white g-letter-spacing--3 g-margin-b-0--xs"><img src="SDORG HomePage/img/LearnMore.png"/></p>
+            </a>
+        </div>
+        <!--========== END SWIPER SLIDER ==========-->
+
+        <!--========== PAGE CONTENT ==========-->
+        <!-- Features -->
+        <a name="MoreAboutSDORG"></a>
+        <div id="js__scroll-to-section" class="container g-padding-y-80--xs g-padding-y-125--sm">
+            <div class="g-text-center--xs g-margin-b-100--xs">
+                <p style="color: #022555" class="text-uppercase g-font-size-18--xs g-font-weight--700 g-letter-spacing--2 g-margin-b-25--xs"><br/>Welcome to SDORG System</p>
+                <h2 class="g-font-size-32--xs g-font-size-36--md">Simple Safe And Secure</h2>
+            </div>
+            <div class="row g-margin-b-60--xs g-margin-b-70--md">
+                <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+                    <div class="clearfix">
+                        <div class="g-media g-width-30--xs">
+                            <div class="wow fadeInDown" data-wow-duration=".3" data-wow-delay=".1s">
+                                <i class="g-font-size-28--xs  ti-desktop" style="color: #022555"></i>
+                            </div>
+                        </div>
+                        <div class="g-media__body g-padding-x-20--xs">
+                            <h3 class="g-font-size-18--xs">Responsive Layout</h3>
+                            <p class="g-margin-b-0--xs">Aha sindahabonera amagambo yo kuhashyrira</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+                    <div class="clearfix">
+                        <div class="g-media g-width-30--xs">
+                            <div class="wow fadeInDown" data-wow-duration=".3" data-wow-delay=".2s">
+                                <i class="g-font-size-28--xs ti-settings" style="color: #022555"></i>
+                            </div>
+                        </div>
+                        <div class="g-media__body g-padding-x-20--xs">
+                            <h3 class="g-font-size-18--xs">Fully Customizable</h3>
+                            <p class="g-margin-b-0--xs">Aha sindahabonera amagambo yo kuhashyrira</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="clearfix">
+                        <div class="g-media g-width-30--xs">
+                            <div class="wow fadeInDown" data-wow-duration=".3" data-wow-delay=".3s">
+                                <i class="g-font-size-28--xs ti-ruler-alt-2" style="color: #022555"></i>
+                            </div>
+                        </div>
+                        <div class="g-media__body g-padding-x-20--xs">
+                            <h3 class="g-font-size-18--xs">Pixel Perfect</h3>
+                            <p class="g-margin-b-0--xs">Aha sindahabonera amagambo yo kuhashyrira</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- // end row  -->
+            <div class="row">
+                <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+                    <div class="clearfix">
+                        <div class="g-media g-width-30--xs">
+                            <div class="wow fadeInDown" data-wow-duration=".3" data-wow-delay=".4s">
+                                <i class="g-font-size-28--xs ti-package" style="color: #022555"></i>
+                            </div>
+                        </div>
+                        <div class="g-media__body g-padding-x-20--xs">
+                            <h3 class="g-font-size-18--xs">Endless Possibilities</h3>
+                            <p class="g-margin-b-0--xs">Aha sindahabonera amagambo yo kuhashyrira</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+                    <div class="clearfix">
+                        <div class="g-media g-width-30--xs">
+                            <div class="wow fadeInDown" data-wow-duration=".3" data-wow-delay=".5s">
+                                <i class="g-font-size-28--xs ti-star" style="color: #022555"></i>
+                            </div>
+                        </div>
+                        <div class="g-media__body g-padding-x-20--xs">
+                            <h3 class="g-font-size-18--xs">Powerful Performance</h3>
+                            <p class="g-margin-b-0--xs">Aha sindahabonera amagambo yo kuhashyrira</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="clearfix">
+                        <div class="g-media g-width-30--xs">
+                            <div class="wow fadeInDown" data-wow-duration=".3" data-wow-delay=".6s">
+                                <i class="g-font-size-28--xs ti-panel" style="color: #022555"></i>
+                            </div>
+                        </div>
+                        <div class="g-media__body g-padding-x-20--xs">
+                            <h3 class="g-font-size-18--xs">Parallax Support</h3>
+                            <p class="g-margin-b-0--xs">Aha sindahabonera amagambo yo kuhashyrira</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- // end row  -->
+        </div>
+        <!-- End Features -->
+
+        <!-- Parallax -->
+        <div class="js__parallax-window" style="background: url(SDORG HomePage/img/1920x1080/0and1-WallPaper.jpg) 50% 0 no-repeat fixed;">
+            <div class="container g-text-center--xs g-padding-y-80--xs g-padding-y-125--sm">
+                <div class="g-margin-b-80--xs">
+                    <h2 class="g-font-size-40--xs g-font-size-50--sm g-font-size-50--md g-color--white">This System Helps To Secure Organization's Devices</h2>
+                </div>
+                <a href="#" class="text-uppercase s-btn s-btn--md s-btn--white-brd g-radius--50">Learn More</a>
+            </div>
+        </div>
+        <!-- End Parallax -->
+
+
+
+        <!-- Feedback Form -->
+        <a name="ContactUS"></a>
+        <div id="js__scroll-to-contact" class="g-bg-color--sky-light">
+            <div class="container g-padding-y-80--xs g-padding-y-125--sm">
+                <div class="g-text-center--xs g-margin-b-80--xs">
+                    <p class="text-uppercase g-font-size-14--xs g-font-weight--700 g-letter-spacing--2 g-margin-b-25--xs" style="color: #022555"><br/>Contact US</p>
+                    <h2 class="g-font-size-32--xs g-font-size-36--md">Send us a note</h2>
+                </div>
+                <form>
+                    <div class="row g-margin-b-40--xs">
+                        <div class="col-sm-6 g-margin-b-20--xs g-margin-b-0--md">
+                            <div class="g-margin-b-20--xs">
+                                <input type="text" class="form-control s-form-v2__input g-radius--50" placeholder="* Name" required="true"/>
+                            </div>
+                            <div class="g-margin-b-20--xs">
+                                <input type="email" class="form-control s-form-v2__input g-radius--50" placeholder="* Email" required="true"/>
+                            </div>
+                            <input type="text" class="form-control s-form-v2__input g-radius--50" placeholder="* Phone" required="true"/>
+                            <br/>
+                            <table border="0">
+                                <tr>
+                                    <td style="width: 11rem;"><b>Our Phone Number: </b></td>
+                                    <td >(+250) 789 099 352 / 722 81 81 91</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Our Email Adrress: </b></td>
+                                    <td>sdorgsys@gmail.com</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Our Social Medias: </b></td>
+                                    <td colspan="3">
+                                        <a class="s-header__action-link" href="https://web.facebook.com/SDORG-Sys-107625291104688" target="_blank" style="color: black;">
+                                            <i class="g-padding-r-5--xs ti-facebook"></i>
+                                            <span class="g-display-none--xs g-display-inline-block--sm">Facebook</span>
+                                        </a>
+                                        <a class="s-header__action-link" href="https://twitter.com/SdorgSys?s=08" target="_blank" style="color: black;">
+                                            <i class="g-padding-r-5--xs ti-twitter"></i>
+                                            <span class="g-display-none--xs g-display-inline-block--sm">Twitter</span>
+                                        </a>
+                                        <a class="s-header__action-link" href="https://www.instagram.com/sdorgsys/" target="_blank" style="color: black;">
+                                            <i class="g-padding-r-5--xs ti-instagram"></i>
+                                            <span class="g-display-none--xs g-display-inline-block--sm">Instagram</span>
+                                        </a>
+                                    </td>  
+                                </tr>
+                            </table>
+
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <textarea class="form-control s-form-v2__input g-radius--10 g-padding-y-20--xs" rows="10" placeholder="* Your message" required="true"></textarea>
+                        </div>
+                    </div>
+                    <div class="g-text-center--xs">
+                        <button type="submit" class="s-btn s-btn--md s-btn--primary-bg g-radius--10 g-padding-x-80--xs" style="background-color: #022555; "><b class="text-uppercase" style="font-family: sans-serif; font-size: 10px; color: white; font-size: 12pt;">Submit</b></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End Feedback Form -->
+
+
+
+        <!--========== END PAGE CONTENT ==========-->
+
+        <!--========== FOOTER ==========-->
+        <a name="abt"></a>
+        <footer class="g-bg-color--dark">
+            <!-- Links -->
+            <div class="g-hor-divider__dashed--white-opacity-lightest">
+                <div class="container g-padding-y-80--xs">   
+                    <div class="col-sm-5 g-margin-b-40--xs g-margin-b-0--md">
+                        <ul class="list-unstyled g-ul-li-tb-5--xs g-margin-b-0--xs">
+                            <li><h3 class="g-font-size-18--xs g-color--white"><b class="g-font-size-18--xs g-color--white">About US</b></h3></li>
+                            <li><p class="g-color--white-opacity"><b class="g-font-size-16--xs g-color--white">Am Student of <abbr title="Adventist University of Central Africa">AUCA</abbr> in <abbr title="Information Technology">IT</abbr> as Faculty and <abbr title="information Managment">Info Managment</abbr> as Department</b><br/><b class="g-font-size-18--xs g-color--white">Name: </b> Esperance IZIBYOSE <br/><b class="g-font-size-18--xs g-color--white">ID: </b> 19496</p></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 col-md-offset-2 col-sm-5 col-sm-offset-1 s-footer__logo g-padding-y-50--xs g-padding-y-0--md">
+                        <h3 class="g-font-size-18--xs g-color--white"><b class="g-font-size-18--xs g-color--white" title="System of Securing Devices of ORGanizations">SDORG Sys</b></h3>
+                        <p class="g-color--white-opacity">This System is about security Devices of any Organization caring on their devices and their visitor’s devices.</p>
+                    </div>
+                </div>
+            </div>
+            <!--</div>-->
+            <!-- End Links -->
+
+            <!-- Copyright -->
+            <div class="container g-padding-y-50--xs">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <a href="index.xhtml">
+                            <img class="g-width-150--xs g-height-auto--xs" src="SDORG HomePage/img/SDORG_rect_W_Logo_Size.png" alt="SDORG Logo" title="System of Securing Devices of ORGanizations"/>
+                        </a>
+                    </div>
+                    <div class="col-xs-6 g-text-right--xs">
+                        <p class="g-font-size-14--xs g-margin-b-0--xs g-color--white-opacity-light"><a href="#"><b class="g-color--white-opacity-light" title="System of Securing Devices of ORGanizations">SDORG</b></a> Done by: <a href="#">Esperance IZIBYOSE #19496</a></p>
+                    </div>
+                </div>
+            </div>
+            <!-- End Copyright -->
+        </footer>
+        <!--========== END FOOTER ==========-->
+
+        <!-- Back To Top -->
+        <a href="javascript:void(0);" class="s-back-to-top js__back-to-top" style="background-color: #022555"></a>
+
+        <!--========== JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) ==========-->
+        <!-- Vendor -->
+        <script type="text/javascript" src="SDORG HomePage/vendor/jquery.min.js"></script> <!-- Important -->
+
+        <script type="text/javascript" src="SDORG HomePage/vendor/bootstrap/js/bootstrap.min.js"></script> <!-- Important -->
+
+        <script type="text/javascript" src="SDORG HomePage/vendor/jquery.back-to-top.min.js"></script> <!-- Important -->
+        <script type="text/javascript" src="SDORG HomePage/vendor/scrollbar/jquery.scrollbar.min.js"></script> <!-- Important -->
+
+        <script type="text/javascript" src="SDORG HomePage/vendor/swiper/swiper.jquery.min.js"></script> <!-- Important -->
+
+        <!-- General Components and Settings -->
+        <script type="text/javascript" src="SDORG HomePage/js/global.min.js"></script>
+        <script type="text/javascript" src="SDORG HomePage/js/components/header-sticky.min.js"></script>
+
+        <script type="text/javascript" src="SDORG HomePage/js/components/swiper.min.js"></script>
+
+        <!--========== END JAVASCRIPTS ==========-->
+
+        <!-- Another js-->
+
+        <!-- Jquery Plugins, main Jquery Preloader -->    
+        <script src="./assets/js/main.js"></script>
+
+
+        <!-- Login js-->
+
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                var aw = $(".arrow-up");
+                var fm = $(".login-form");
+                var status = false;
+                $("#logging").click(function (event) {
+                    event.preventDefault();
+                    if (status == false) {
+                        aw.fadeIn();
+                        fm.fadeIn();
+                        status = true;
+                    } else {
+                        aw.fadeOut();
+                        fm.fadeOut();
+                        status = false;
+                    }
+                })
+                $("#trigz").click(function (event) {
+                    event.preventDefault();
+                    aw.fadeOut();
+                    fm.fadeOut();
+                    status = false;
+                })
+
             })
+
         </script>
-        <!--===============================================================================================-->
-        <script src="Login_v1/js/main.js"></script>
 
     </h:body>
 </html>

@@ -101,9 +101,9 @@
                     <ul class="list">
                         <li class="header">MENU</li>
                         <li>
-                            <a href="#">
+                            <a href="alerted.xhtml">
                                 <i class="material-icons">home</i>
-                                <span>Dashboard</span>
+                                <span>Alerted</span>
                             </a>
                         </li>
                         <li>
@@ -131,7 +131,7 @@
                 <!-- Footer -->
                 <div class="legal">
                     <div class="copyright">
-                        &copy; 2020 <a href="javascript:void(0);">Josue</a>.
+                        &copy; 2020 <a href="javascript:void(0);">Esperance IZIBYOSE #19496</a>.
                     </div>
                 </div>
                 <!-- #Footer -->
@@ -153,13 +153,19 @@
                 <div class="row clearfix">
                     <c:choose>
                         <c:when test="#{securityModel.chosenAccusation eq ''}">
-                            <div class="alert alert-success" role="alert">
+                            <div class="alert alert-success alert-dismissible fadeIn" role="alert">
                                 #{securityModel.alertMessage}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div class="alert alert-danger" role="alert">
+                            <div class="alert alert-danger alert-dismissible " role="alert">
                                 #{securityModel.alertMessage}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
                         </c:otherwise>
                     </c:choose>
@@ -174,6 +180,7 @@
                             </div>
                             <div class="body">
                                 <h:form class="form-horizontal">
+                                    <p:growl />
                                     <div class="row clearfix">
                                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
                                             <label for="email_address_2">Serial No.</label>
@@ -210,10 +217,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="row clearfix">
                                         <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                                            <h:commandButton rendered="#{securityModel.alerted}" value="Submit" action="#{securityModel.checkInDevice()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
+                                            <h:commandButton value="Submit" action="#{securityModel.checkInDevice()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
                                         </div>
                                     </div>
 

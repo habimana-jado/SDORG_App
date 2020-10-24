@@ -23,8 +23,17 @@ public class MovementDao extends GenericDao<Movement> {
         return list;
     }
 
+    public List<Movement> findByUniversityLogged(University x) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Movement a WHERE a.university = :x ");
+        q.setParameter("x", x);
+        List<Movement> list = q.list();
+        s.close();
+        return list;
+    }
+
     public List<Movement> findByUniversityAndMovementStatusAndDate(University x, EMovementStatus y, String from, String to) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date frm = sdf.parse(from);
         Date too = sdf.parse(to);
         Session s = HibernateUtil.getSessionFactory().openSession();

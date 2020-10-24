@@ -41,4 +41,13 @@ public class AccusationDao extends GenericDao<Accusation>{
         return list;
     }
     
+    public List<Accusation> findByUniversity(University st){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Accusation a WHERE a.movement.university = :x");
+        q.setParameter("x", st);
+        List<Accusation> u = q.list();
+        s.close();
+        return u;
+    }
+    
 }

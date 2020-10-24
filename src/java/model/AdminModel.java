@@ -1,5 +1,16 @@
 package model;
 
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import common.FileUpload;
 import common.PassCode;
 import dao.AccusationDao;
@@ -8,11 +19,10 @@ import dao.DeviceDao;
 import dao.FacultyDao;
 import dao.LecturerDao;
 import dao.MovementDao;
-import dao.PersonDao;
 import dao.StaffDao;
 import dao.StudentDao;
-import dao.UniversityDao;
 import dao.UserDao;
+import domain.Accusation;
 import domain.Department;
 import domain.Device;
 import domain.EGender;
@@ -22,18 +32,22 @@ import domain.EUserType;
 import domain.Faculty;
 import domain.Lecturer;
 import domain.Movement;
-import domain.Person;
 import domain.Staff;
 import domain.Student;
 import domain.University;
 import domain.User;
+import java.awt.Color;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +58,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -96,7 +111,9 @@ public class AdminModel {
     private PieChartModel pieModel2;
     private String from;
     private String to;
-
+    private final List<Movement> movements = new MovementDao().findByUniversityLogged(loggedInUser.getAdmin().getUniversity());
+    private final List<Accusation> accusations = new AccusationDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+    
     @PostConstruct
     public void init() {
         createPieModel1();
@@ -129,6 +146,8 @@ public class AdminModel {
     public void refresh() {
         new MovementDao().findByUniversity(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN);
         universityExitedDevices = new MovementDao().findByUniversity(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT);
+        to = new String();
+        from = new String();
     }
 
     public void registerFaculty() {
@@ -449,6 +468,244 @@ public class AdminModel {
     public void Upload(FileUploadEvent event) {
         chosenImage.add(new FileUpload().Upload(event, "C:\\Users\\nizey\\OneDrive\\Documents\\NetBeansProjects\\Thesis\\SDORG\\web\\uploads\\profile\\"));
     }
+    
+    public void generatemovementreport() throws FileNotFoundException, DocumentException, BadElementException, IOException, Exception {
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        Document document = new Document();
+        Rectangle rect = new Rectangle(20, 20, 580, 500);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance((com.lowagie.text.Document) document, baos);
+        writer.setBoxSize("art", rect);
+        document.setPageSize(rect);
+        if (!document.isOpen()) {
+            document.open();
+        }
+//        String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("\\Uploads");
+//        path = path.substring(0, path.indexOf("\\build"));
+//        path = path + "\\web\\Uploads\\"+h.getImage();
+//        Image image = Image.getInstance(path);
+//        image.scaleAbsolute(50, 50);
+//        image.setAlignment(Element.ALIGN_LEFT);
+        Paragraph title = new Paragraph();
+        //BEGIN page
+//        title.add(image);
+        document.add(title);
+        Font font0 = new Font(Font.TIMES_ROMAN, 9, Font.NORMAL);
+        Font font1 = new Font(Font.TIMES_ROMAN, 14, Font.ITALIC, new Color(37, 46, 158));
+        Font font2 = new Font(Font.TIMES_ROMAN, 9, Font.NORMAL, new Color(0, 0, 0));
+        Font font5 = new Font(Font.TIMES_ROMAN, 10, Font.ITALIC, new Color(0, 0, 0));
+        Font colorFont = new Font(Font.TIMES_ROMAN, 10, Font.BOLD, new Color(0, 0, 0));
+        Font font6 = new Font(Font.TIMES_ROMAN, 9, Font.NORMAL);
+        document.add(new Paragraph("SDORG Application\n"));
+        document.add(new Paragraph("KG 625 ST 4\n", font0));
+        document.add(new Paragraph("P.O.BOX 131 \n", font0));
+        document.add(new Paragraph("KIGALI-RWANDA\n\n", font0));
+        Paragraph p = new Paragraph("University Movements Report ", colorFont);
+        p.setAlignment(Element.ALIGN_CENTER);
+        document.add(p);
+        document.add(new Paragraph("\n"));
+        PdfPTable tables = new PdfPTable(6);
+        tables.setWidthPercentage(100);
+
+        PdfPCell cell1 = new PdfPCell(new Phrase("#", font2));
+        cell1.setBorder(Rectangle.BOX);
+        tables.addCell(cell1);
+
+        PdfPCell c2 = new PdfPCell(new Phrase("Device Name", font2));
+        c2.setBorder(Rectangle.BOX);
+        tables.addCell(c2);
+
+        PdfPCell c3 = new PdfPCell(new Phrase("Device Type", font2));
+        c3.setBorder(Rectangle.BOX);
+        tables.addCell(c3);
+
+        PdfPCell c4 = new PdfPCell(new Phrase("Entrance Time", font2));
+        c4.setBorder(Rectangle.BOX);
+        tables.addCell(c4);
+
+        PdfPCell c5 = new PdfPCell(new Phrase("Exit Time", font2));
+        c5.setBorder(Rectangle.BOX);
+        tables.addCell(c5);
+
+        PdfPCell c6 = new PdfPCell(new Phrase("Status", font2));
+        c6.setBorder(Rectangle.BOX);
+        tables.addCell(c6);
+
+        tables.setHeaderRows(1);
+        PdfPCell pdfc5;
+        PdfPCell pdfc1;
+        PdfPCell pdfc3;
+        PdfPCell pdfc2;
+        PdfPCell pdfc4;
+        PdfPCell pdfc6;
+        PdfPCell pdfc7;
+        PdfPCell pdfc8;
+        int i = 1;
+        DecimalFormat dcf = new DecimalFormat("###,###,###");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        for (Movement x : movements) {
+            pdfc5 = new PdfPCell(new Phrase(i +""));
+            pdfc5.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc5);
+
+            pdfc4 = new PdfPCell(new Phrase(x.getDevice().getDeviceName() + "", font6));
+            pdfc4.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc4);
+
+            pdfc3 = new PdfPCell(new Phrase(x.getDevice().getDeviceType() + "", font6));
+            pdfc3.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc3);
+
+            pdfc2 = new PdfPCell(new Phrase(x.getEntranceTime() + "", font6));
+            pdfc2.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc2);
+
+            pdfc1 = new PdfPCell(new Phrase(x.getExitTime() + "", font6));
+            pdfc1.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc1);
+
+            pdfc6 = new PdfPCell(new Phrase(x.getMovementStatus() + "", font6));
+            pdfc6.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc6);
+
+            i++;
+        }
+        document.add(tables);
+        Paragraph par = new Paragraph("\n\nPrinted On: " + sdf.format(new Date()) + ". By: " + loggedInUser.getAdmin().getFirstName() + " " , font1);
+        par.setAlignment(Element.ALIGN_RIGHT);
+        document.add(par);
+        document.close();
+        String fileName = "Report_" + new Date().getTime() / (1000 * 3600 * 24);
+        writePDFToResponse(context.getExternalContext(), baos, fileName);
+        context.responseComplete();
+    }
+    
+    public void generateaccusationreport() throws FileNotFoundException, DocumentException, BadElementException, IOException, Exception {
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        Document document = new Document();
+        Rectangle rect = new Rectangle(20, 20, 580, 500);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance((com.lowagie.text.Document) document, baos);
+        writer.setBoxSize("art", rect);
+        document.setPageSize(rect);
+        if (!document.isOpen()) {
+            document.open();
+        }
+//        String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("\\Uploads");
+//        path = path.substring(0, path.indexOf("\\build"));
+//        path = path + "\\web\\Uploads\\"+h.getImage();
+//        Image image = Image.getInstance(path);
+//        image.scaleAbsolute(50, 50);
+//        image.setAlignment(Element.ALIGN_LEFT);
+        Paragraph title = new Paragraph();
+        //BEGIN page
+//        title.add(image);
+        document.add(title);
+        Font font0 = new Font(Font.TIMES_ROMAN, 9, Font.NORMAL);
+        Font font1 = new Font(Font.TIMES_ROMAN, 14, Font.ITALIC, new Color(37, 46, 158));
+        Font font2 = new Font(Font.TIMES_ROMAN, 9, Font.NORMAL, new Color(0, 0, 0));
+        Font font5 = new Font(Font.TIMES_ROMAN, 10, Font.ITALIC, new Color(0, 0, 0));
+        Font colorFont = new Font(Font.TIMES_ROMAN, 10, Font.BOLD, new Color(0, 0, 0));
+        Font font6 = new Font(Font.TIMES_ROMAN, 9, Font.NORMAL);
+        document.add(new Paragraph("SDORG Application\n"));
+        document.add(new Paragraph("KG 625 ST 4\n", font0));
+        document.add(new Paragraph("P.O.BOX 131 \n", font0));
+        document.add(new Paragraph("KIGALI-RWANDA\n\n", font0));
+        Paragraph p = new Paragraph("University Complaints Report ", colorFont);
+        p.setAlignment(Element.ALIGN_CENTER);
+        document.add(p);
+        document.add(new Paragraph("\n"));
+        PdfPTable tables = new PdfPTable(6);
+        tables.setWidthPercentage(100);
+
+        PdfPCell cell1 = new PdfPCell(new Phrase("#", font2));
+        cell1.setBorder(Rectangle.BOX);
+        tables.addCell(cell1);
+
+        PdfPCell c2 = new PdfPCell(new Phrase("Device Name", font2));
+        c2.setBorder(Rectangle.BOX);
+        tables.addCell(c2);
+
+        PdfPCell c3 = new PdfPCell(new Phrase("Device Type", font2));
+        c3.setBorder(Rectangle.BOX);
+        tables.addCell(c3);
+
+        PdfPCell c4 = new PdfPCell(new Phrase("Complaint Date", font2));
+        c4.setBorder(Rectangle.BOX);
+        tables.addCell(c4);
+
+        PdfPCell c5 = new PdfPCell(new Phrase("Owner Comment", font2));
+        c5.setBorder(Rectangle.BOX);
+        tables.addCell(c5);
+
+        PdfPCell c6 = new PdfPCell(new Phrase("Status", font2));
+        c6.setBorder(Rectangle.BOX);
+        tables.addCell(c6);
+
+        tables.setHeaderRows(1);
+        PdfPCell pdfc5;
+        PdfPCell pdfc1;
+        PdfPCell pdfc3;
+        PdfPCell pdfc2;
+        PdfPCell pdfc4;
+        PdfPCell pdfc6;
+        PdfPCell pdfc7;
+        PdfPCell pdfc8;
+        int i = 1;
+        DecimalFormat dcf = new DecimalFormat("###,###,###");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        for (Accusation x : accusations) {
+            pdfc5 = new PdfPCell(new Phrase(i +""));
+            pdfc5.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc5);
+
+            pdfc4 = new PdfPCell(new Phrase(x.getMovement().getDevice().getDeviceName() + "", font6));
+            pdfc4.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc4);
+
+            pdfc3 = new PdfPCell(new Phrase(x.getMovement().getDevice().getDeviceType() + "", font6));
+            pdfc3.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc3);
+
+            pdfc2 = new PdfPCell(new Phrase(x.getReportingPeriod() + "", font6));
+            pdfc2.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc2);
+
+            pdfc1 = new PdfPCell(new Phrase(x.getComment() + "", font6));
+            pdfc1.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc1);
+
+            pdfc6 = new PdfPCell(new Phrase(x.getStatus() + "", font6));
+            pdfc6.setBorder(Rectangle.BOX);
+            tables.addCell(pdfc6);
+
+            i++;
+        }
+        document.add(tables);
+        Paragraph par = new Paragraph("\n\nPrinted On: " + sdf.format(new Date()) + ". By: " + loggedInUser.getAdmin().getFirstName() + " ", font1);
+        par.setAlignment(Element.ALIGN_RIGHT);
+        document.add(par);
+        document.close();
+        String fileName = "Report_" + new Date().getTime() / (1000 * 3600 * 24);
+        writePDFToResponse(context.getExternalContext(), baos, fileName);
+        context.responseComplete();
+    }
+
+    private void writePDFToResponse(ExternalContext externalContext, ByteArrayOutputStream baos, String fileName) throws IOException {
+        externalContext.responseReset();
+        externalContext.setResponseContentType("application/pdf");
+        externalContext.setResponseHeader("Expires", "0");
+        externalContext.setResponseHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+        externalContext.setResponseHeader("Pragma", "public");
+        externalContext.setResponseHeader("Content-disposition", "attachment;filename=" + fileName + ".pdf");
+        externalContext.setResponseContentLength(baos.size());
+        OutputStream out = externalContext.getResponseOutputStream();
+        baos.writeTo(out);
+        externalContext.responseFlushBuffer();
+    }
+
 
     public Student getStudent() {
         return student;
