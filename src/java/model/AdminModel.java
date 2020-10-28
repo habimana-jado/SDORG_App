@@ -51,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,7 +114,7 @@ public class AdminModel {
     private String to;
     private final List<Movement> movements = new MovementDao().findByUniversityLogged(loggedInUser.getAdmin().getUniversity());
     private final List<Accusation> accusations = new AccusationDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
-    
+
     @PostConstruct
     public void init() {
         createPieModel1();
@@ -151,24 +152,46 @@ public class AdminModel {
     }
 
     public void registerFaculty() {
-        faculty.setUniversity(loggedInUser.getAdmin().getUniversity());
-        new FacultyDao().register(faculty);
-        faculty = new Faculty();
-        faculties = new FacultyDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+        Boolean flag = false;
+        for (Faculty f : faculties) {
+            if (faculty.getName().trim().equalsIgnoreCase(f.getName().trim())) {
+                flag = true;
+            }
+        }
+        if (Objects.equals(flag, Boolean.FALSE)) {
+            faculty.setUniversity(loggedInUser.getAdmin().getUniversity());
+            new FacultyDao().register(faculty);
+            faculty = new Faculty();
+            faculties = new FacultyDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
 
-        FacesContext fc = FacesContext.getCurrentInstance();
-        fc.addMessage(null, new FacesMessage("Faculty Registered"));
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Faculty Registered"));
+        } else {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Faculty Name Already Registered"));
+        }
     }
 
     public void registerDepartment() {
-        Faculty f = new FacultyDao().findOne(Faculty.class, facultyId);
-        department.setFaculty(f);
-        new DepartmentDao().register(department);
-        department = new Department();
-        departments = new DepartmentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+        Boolean flag = false;
+        for (Department f : departments) {
+            if (department.getName().trim().equalsIgnoreCase(f.getName().trim())) {
+                flag = true;
+            }
+        }
+        if (Objects.equals(flag, Boolean.FALSE)) {
+            Faculty f = new FacultyDao().findOne(Faculty.class, facultyId);
+            department.setFaculty(f);
+            new DepartmentDao().register(department);
+            department = new Department();
+            departments = new DepartmentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
 
-        FacesContext fc = FacesContext.getCurrentInstance();
-        fc.addMessage(null, new FacesMessage("Department Registered"));
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Department Registered"));
+        } else {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Department Name Already Registered"));
+        }
 
     }
 
@@ -176,6 +199,9 @@ public class AdminModel {
         if (new StudentDao().findOne(Student.class, student.getNationalId()) != null) {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("National ID already used"));
+        } else if (new UserDao().usernameExist(user.getUsername())) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Username already exists"));
         } else {
             if (chosenImage.isEmpty()) {
                 FacesContext fc = FacesContext.getCurrentInstance();
@@ -219,6 +245,9 @@ public class AdminModel {
             if (chosenImage.isEmpty()) {
                 FacesContext fc = FacesContext.getCurrentInstance();
                 fc.addMessage(null, new FacesMessage("Upload Profile Image"));
+            } else if (new UserDao().usernameExist(user.getUsername())) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Username already exists"));
             } else {
                 for (String x : chosenImage) {
                     lecturer.setProfilePicture(x);
@@ -253,6 +282,9 @@ public class AdminModel {
         if (chosenImage.isEmpty()) {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Upload Profile Image"));
+        } else if (new UserDao().usernameExist(user.getUsername())) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Username already exists"));
         } else {
             for (String x : chosenImage) {
                 staff.setProfilePicture(x);
@@ -468,9 +500,9 @@ public class AdminModel {
     public void Upload(FileUploadEvent event) {
         chosenImage.add(new FileUpload().Upload(event, "C:\\Users\\nizey\\OneDrive\\Documents\\NetBeansProjects\\Thesis\\SDORG\\web\\uploads\\profile\\"));
     }
-    
+
     public void generatemovementreport() throws FileNotFoundException, DocumentException, BadElementException, IOException, Exception {
-        
+
         FacesContext context = FacesContext.getCurrentInstance();
         Document document = new Document();
         Rectangle rect = new Rectangle(20, 20, 580, 500);
@@ -545,7 +577,7 @@ public class AdminModel {
         DecimalFormat dcf = new DecimalFormat("###,###,###");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         for (Movement x : movements) {
-            pdfc5 = new PdfPCell(new Phrase(i +""));
+            pdfc5 = new PdfPCell(new Phrase(i + ""));
             pdfc5.setBorder(Rectangle.BOX);
             tables.addCell(pdfc5);
 
@@ -572,7 +604,7 @@ public class AdminModel {
             i++;
         }
         document.add(tables);
-        Paragraph par = new Paragraph("\n\nPrinted On: " + sdf.format(new Date()) + ". By: " + loggedInUser.getAdmin().getFirstName() + " " , font1);
+        Paragraph par = new Paragraph("\n\nPrinted On: " + sdf.format(new Date()) + ". By: " + loggedInUser.getAdmin().getFirstName() + " ", font1);
         par.setAlignment(Element.ALIGN_RIGHT);
         document.add(par);
         document.close();
@@ -580,9 +612,9 @@ public class AdminModel {
         writePDFToResponse(context.getExternalContext(), baos, fileName);
         context.responseComplete();
     }
-    
+
     public void generateaccusationreport() throws FileNotFoundException, DocumentException, BadElementException, IOException, Exception {
-        
+
         FacesContext context = FacesContext.getCurrentInstance();
         Document document = new Document();
         Rectangle rect = new Rectangle(20, 20, 580, 500);
@@ -657,7 +689,7 @@ public class AdminModel {
         DecimalFormat dcf = new DecimalFormat("###,###,###");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         for (Accusation x : accusations) {
-            pdfc5 = new PdfPCell(new Phrase(i +""));
+            pdfc5 = new PdfPCell(new Phrase(i + ""));
             pdfc5.setBorder(Rectangle.BOX);
             tables.addCell(pdfc5);
 
@@ -705,7 +737,6 @@ public class AdminModel {
         baos.writeTo(out);
         externalContext.responseFlushBuffer();
     }
-
 
     public Student getStudent() {
         return student;

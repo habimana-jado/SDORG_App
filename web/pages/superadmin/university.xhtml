@@ -75,7 +75,7 @@
             <aside id="leftsidebar" class="sidebar">
                 <!-- User Info -->
                 <div class="user-info" >
-                    <div class="image">
+                    <div class="image" style="background-image: url(../images/profile-post-image.jpg)">
                     </div>
                     <div class="info-container">
                         <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#{superAdminModel.loggedInUser.username} </div>
@@ -177,7 +177,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <h:inputText class="form-control" value="#{superAdminModel.university.areaCode}"  required="true" requiredMessage="Please Fill Area Code"/>
+                                                    <p:inputMask mask="+999" class="form-control" value="#{superAdminModel.university.areaCode}"  required="true" requiredMessage="Please Fill Area Code"/>
                                                     <label class="label--desc">Area Code</label>
                                                 </div>
                                             </div>
@@ -185,7 +185,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <h:inputText class="form-control" value="#{superAdminModel.university.phoneNumber}"  required="true" requiredMessage="Please Fill University Phone"/>
+                                                    <p:inputMask mask="999 999 999" class="form-control" value="#{superAdminModel.university.phoneNumber}"  required="true" requiredMessage="Please Fill University Phone"/>
                                                     <label class="label--desc">Phone Number</label>
                                                 </div>
                                             </div>

@@ -33,7 +33,10 @@ public class SuperAdminModel {
          if (chosenImage.isEmpty()) {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Upload Profile Image"));
-        } else {
+        } else if(new UserDao().usernameExist(user.getUsername())){
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Username already exists"));            
+        }else{
             chosenImage.forEach((x) -> {
                 university.setProfilePicture(x);
             });

@@ -71,7 +71,7 @@ public class SecurityModel {
     private String alertMessage = "This device is free to enter";
     private Accusation chosenAccusation = new Accusation();
     private boolean alerted = Boolean.FALSE;
-    
+
     @PostConstruct
     public void init() {
         loggedInUser = (User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
@@ -86,21 +86,25 @@ public class SecurityModel {
         } else {
             visitor.setGender(EGender.FEMALE);
         }
+        if (new UserDao().usernameExist(user.getUsername())) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Username already exists"));
+        } else {
+            visitor.setPersonType("Visitor");
+            new VisitorDao().register(visitor);
+            persons = new PersonDao().findAll(Person.class);
 
-        visitor.setPersonType("Visitor");
-        new VisitorDao().register(visitor);
-        persons = new PersonDao().findAll(Person.class);
+            user.setVisitor(visitor);
+            user.setStatus(EStatus.ACTIVE);
+            user.setUserType(EUserType.VISITOR);
+            user.setPassword(new PassCode().encrypt(password));
+            new UserDao().register(user);
+            user = new User();
+            visitor = new Visitor();
 
-        user.setVisitor(visitor);
-        user.setStatus(EStatus.ACTIVE);
-        user.setUserType(EUserType.VISITOR);
-        user.setPassword(new PassCode().encrypt(password));
-        new UserDao().register(user);
-        user = new User();
-        visitor = new Visitor();
-
-        FacesContext fc = FacesContext.getCurrentInstance();
-        fc.addMessage(null, new FacesMessage("Visitor Registered"));
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Visitor Registered"));
+        }
     }
 
     public void check24HAlert() {
@@ -118,8 +122,8 @@ public class SecurityModel {
             alertedDevices.clear();
             for (Movement m : universityDevices) {
 //                d1 = sdf.parse(m.getEntranceTime().toString());
-                    d1 = m.getEntranceTime();
-                    diff = d2.getTime() - d1.getTime();
+                d1 = m.getEntranceTime();
+                diff = d2.getTime() - d1.getTime();
                 diffSeconds = diff / 1000;
                 if (diffSeconds > 86400) {
                     alertedDevices.add(m);
@@ -139,10 +143,10 @@ public class SecurityModel {
     public String navigateToDevice(DeviceImage device) {
         chosenDeviceImage = device;
         chosenAccusation = new AccusationDao().findByDeviceAndStatus(device.getDevice());
-        if(chosenAccusation == null){
+        if (chosenAccusation == null) {
             alertMessage = "This device is free to enter";
             alerted = Boolean.FALSE;
-        }else{
+        } else {
             alertMessage = "This device is alerted in Complaints";
             alerted = Boolean.TRUE;
         }
@@ -211,9 +215,8 @@ public class SecurityModel {
         fc.addMessage(null, new FacesMessage("Device Checked-Out"));
     }
 
-    
     public void generateaccusationreport() throws FileNotFoundException, DocumentException, BadElementException, IOException, Exception {
-        
+
         FacesContext context = FacesContext.getCurrentInstance();
         Document document = new Document();
         Rectangle rect = new Rectangle(20, 20, 580, 500);
@@ -288,7 +291,7 @@ public class SecurityModel {
         DecimalFormat dcf = new DecimalFormat("###,###,###");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         for (Movement x : alertedDevices) {
-            pdfc5 = new PdfPCell(new Phrase(i +""));
+            pdfc5 = new PdfPCell(new Phrase(i + ""));
             pdfc5.setBorder(Rectangle.BOX);
             tables.addCell(pdfc5);
 
@@ -300,11 +303,11 @@ public class SecurityModel {
             pdfc3.setBorder(Rectangle.BOX);
             tables.addCell(pdfc3);
 
-            pdfc2 = new PdfPCell(new Phrase(x.getEntranceTime()+ "", font6));
+            pdfc2 = new PdfPCell(new Phrase(x.getEntranceTime() + "", font6));
             pdfc2.setBorder(Rectangle.BOX);
             tables.addCell(pdfc2);
 
-            pdfc1 = new PdfPCell(new Phrase(x.getDevice().getPerson().getFirstName()+" "+x.getDevice().getPerson().getLastName() + "", font6));
+            pdfc1 = new PdfPCell(new Phrase(x.getDevice().getPerson().getFirstName() + " " + x.getDevice().getPerson().getLastName() + "", font6));
             pdfc1.setBorder(Rectangle.BOX);
             tables.addCell(pdfc1);
 
@@ -336,7 +339,7 @@ public class SecurityModel {
         baos.writeTo(out);
         externalContext.responseFlushBuffer();
     }
-    
+
     public void upload(FileUploadEvent event) {
         chosenImage.add(new FileUpload().Upload(event, "C:\\Users\\nizey\\OneDrive\\Documents\\NetBeansProjects\\Thesis\\SDORG\\web\\uploads\\device\\"));
     }

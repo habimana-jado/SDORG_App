@@ -11,6 +11,13 @@ import org.hibernate.Session;
 
 public class UserDao extends GenericDao<User>{
     
+    public Boolean usernameExist(String username){
+        Session s=HibernateUtil.getSessionFactory().openSession();
+        Query q=s.createQuery("select CASE WHEN (COUNT(a) > 0) THEN true else false end from User a where a.username=:v ");
+        q.setParameter("v", username);
+        Boolean l=(Boolean) q.uniqueResult();
+        return l;
+    }
     public List<User> login(String u,String password){
         Session s=HibernateUtil.getSessionFactory().openSession();
         Query q=s.createQuery("select a from User a where a.username=:v and a.password=:p");
