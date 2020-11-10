@@ -36,7 +36,7 @@ After choosing the picture, do not forget to click upload
 From here now you are capable to navigate as a university
 
 	1. You can register Student 
-	2. You can 	register Lecturer 
+	2. You can register Lecturer 
 	3. You can register Security Guard
 
 By registering a student as well as the lecturer, then they are capable to login and
