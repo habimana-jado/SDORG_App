@@ -71,6 +71,9 @@ public class SecurityModel {
     private String alertMessage = "This device is free to enter";
     private Accusation chosenAccusation = new Accusation();
     private boolean alerted = Boolean.FALSE;
+    private String rfid = new String();
+    private Device chosenDevice = new Device();
+    
 
     @PostConstruct
     public void init() {
@@ -133,6 +136,20 @@ public class SecurityModel {
             e.printStackTrace();
         }
     }
+    public void searchByRfid(){
+        chosenDevice = new DeviceDao().findByRfid(rfid);
+        System.out.println(chosenDevice.getDeviceName()+" = chosen Device");
+        chosenAccusation = new AccusationDao().findByDeviceAndStatus(chosenDevice);
+        System.out.println(chosenAccusation.getReportingPeriod()+" = Chosen Accusation");
+        if (chosenAccusation == null) {
+            alertMessage = "This device is free to enter";
+            alerted = Boolean.FALSE;
+        } else {
+            alertMessage = "This device is alerted in Complaints";
+            alerted = Boolean.TRUE;
+        }
+        System.out.println(alertMessage+" = Alerted Message");
+    }
 
     public String navigateToRegisterVisitorDevice(Person person) {
         chosenPerson = person;
@@ -193,6 +210,24 @@ public class SecurityModel {
         Device device = chosenDeviceImage.getDevice();
         device.setMovementStatus(EMovementStatus.CHECKED_IN);
         new DeviceDao().update(device);
+
+        visitorDevices = new DeviceImageDao().findByPerson(chosenPerson);
+        universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Device Checked-In"));
+    }
+    
+    public void checkInDeviceByRFID() {
+        Movement movement = new Movement();
+        movement.setDevice(chosenDevice);
+        movement.setEntranceTime(new Date());
+        movement.setMovementStatus(EMovementStatus.CHECKED_IN);
+        movement.setUniversity(loggedInUser.getStaff().getUniversity());
+        new MovementDao().register(movement);
+
+        chosenDevice.setMovementStatus(EMovementStatus.CHECKED_IN);
+        new DeviceDao().update(chosenDevice);
 
         visitorDevices = new DeviceImageDao().findByPerson(chosenPerson);
         universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
@@ -470,6 +505,22 @@ public class SecurityModel {
 
     public void setAlerted(boolean alerted) {
         this.alerted = alerted;
+    }
+
+    public String getRfid() {
+        return rfid;
+    }
+
+    public void setRfid(String rfid) {
+        this.rfid = rfid;
+    }
+
+    public Device getChosenDevice() {
+        return chosenDevice;
+    }
+
+    public void setChosenDevice(Device chosenDevice) {
+        this.chosenDevice = chosenDevice;
     }
 
 }

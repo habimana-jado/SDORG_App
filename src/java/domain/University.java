@@ -36,6 +36,10 @@ public class University implements Serializable{
     @Fetch(FetchMode.SUBSELECT)
     private List<Staff> staff;
 
+    @OneToMany(mappedBy = "university", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Security> securitys;
+
     public String getUniversityId() {
         return universityId;
     }
@@ -122,6 +126,14 @@ public class University implements Serializable{
 
     public void setStaff(List<Staff> staff) {
         this.staff = staff;
+    }
+
+    public List<Security> getSecuritys() {
+        return securitys;
+    }
+
+    public void setSecuritys(List<Security> securitys) {
+        this.securitys = securitys;
     }
 
     

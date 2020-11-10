@@ -1,7 +1,9 @@
 package dao;
 
 import domain.EMovementStatus;
+import domain.Lecturer;
 import domain.Movement;
+import domain.Staff;
 import domain.Student;
 import domain.University;
 import java.text.ParseException;
@@ -48,6 +50,23 @@ public class MovementDao extends GenericDao<Movement> {
     }
 
     public List<Movement> findByStudent(Student x) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Movement a WHERE a.device.person = :x");
+        q.setParameter("x", x);
+        List<Movement> list = q.list();
+        s.close();
+        return list;
+    }
+    public List<Movement> findByLecturer(Lecturer x) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Movement a WHERE a.device.person = :x");
+        q.setParameter("x", x);
+        List<Movement> list = q.list();
+        s.close();
+        return list;
+    }
+
+    public List<Movement> findByStaff(Staff x) {
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM Movement a WHERE a.device.person = :x");
         q.setParameter("x", x);

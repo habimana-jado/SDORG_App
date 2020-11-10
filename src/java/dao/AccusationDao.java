@@ -2,9 +2,9 @@
 package dao;
 
 import domain.Accusation;
-import domain.Department;
 import domain.Device;
-import domain.EMovementStatus;
+import domain.Lecturer;
+import domain.Staff;
 import domain.Student;
 import domain.University;
 import java.util.List;
@@ -13,6 +13,23 @@ import org.hibernate.Session;
 
 public class AccusationDao extends GenericDao<Accusation>{
     public List<Accusation> findByStudent(Student st){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Accusation a WHERE a.movement.device.person = :x");
+        q.setParameter("x", st);
+        List<Accusation> u = q.list();
+        s.close();
+        return u;
+    }
+    public List<Accusation> findByLecturer(Lecturer st){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Accusation a WHERE a.movement.device.person = :x");
+        q.setParameter("x", st);
+        List<Accusation> u = q.list();
+        s.close();
+        return u;
+    }
+    
+    public List<Accusation> findByStaff(Staff st){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM Accusation a WHERE a.movement.device.person = :x");
         q.setParameter("x", st);

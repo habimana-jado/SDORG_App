@@ -19,6 +19,7 @@ import dao.DeviceDao;
 import dao.FacultyDao;
 import dao.LecturerDao;
 import dao.MovementDao;
+import dao.SecurityDao;
 import dao.StaffDao;
 import dao.StudentDao;
 import dao.UserDao;
@@ -32,6 +33,7 @@ import domain.EUserType;
 import domain.Faculty;
 import domain.Lecturer;
 import domain.Movement;
+import domain.Security;
 import domain.Staff;
 import domain.Student;
 import domain.University;
@@ -80,10 +82,12 @@ public class AdminModel {
     private University university = new University();
     private User user = new User();
     private Staff staff = new Staff();
+    private Security security = new Security();
     private User loggedInUser = (User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
     private List<Student> students = new StudentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
     private List<Lecturer> lecturers = new LecturerDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
     private List<Staff> staffs = new StaffDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+    private List<Security> securits = new SecurityDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
     private List<String> chosenImage = new ArrayList<>();
     private String password = new String();
     private Device device = new Device();
@@ -103,6 +107,7 @@ public class AdminModel {
     private List<User> staffUsers = new UserDao().findByAccess(EUserType.SECURITY);
     private List<User> lecturerUsers = new UserDao().findByAccess(EUserType.LECTURER);
     private List<User> adminUsers = new UserDao().findByAccess(EUserType.ADMIN);
+    private List<User> securityUsers = new UserDao().findByAccess(EUserType.STAFF);
 //    private List<Movement> universityDevices = new ArrayList<>();
     private List<Movement> universityDevices = new MovementDao().findByUniversity(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN);
     private List<Movement> universityExitedDevices = new MovementDao().findByUniversity(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT);
@@ -313,6 +318,41 @@ public class AdminModel {
         }
     }
 
+    public void registerStaff() throws Exception {
+        if (chosenImage.isEmpty()) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Upload Profile Image"));
+        } else if (new UserDao().usernameExist(user.getUsername())) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Username already exists"));
+        } else {
+            for (String x : chosenImage) {
+                security.setProfilePicture(x);
+            }
+            chosenImage.clear();
+            security.setUniversity(loggedInUser.getAdmin().getUniversity());
+            if (gender.matches("Male")) {
+                security.setGender(EGender.MALE);
+            } else {
+                security.setGender(EGender.FEMALE);
+            }
+            security.setPersonType("Security");
+            new SecurityDao().register(security);
+
+            user.setSecurity(security);
+            user.setStatus(EStatus.ACTIVE);
+            user.setUserType(EUserType.STAFF);
+            user.setPassword(new PassCode().encrypt(password));
+            new UserDao().register(user);
+            user = new User();
+            security = new Security();
+            securits = new SecurityDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Staff Registered"));
+        }
+    }
+
     public void disable(User user) {
         user.setStatus(EStatus.INACTIVE);
         new UserDao().update(user);
@@ -321,6 +361,7 @@ public class AdminModel {
         staffUsers = new UserDao().findByAccess(EUserType.SECURITY);
         lecturerUsers = new UserDao().findByAccess(EUserType.LECTURER);
         adminUsers = new UserDao().findByAccess(EUserType.ADMIN);
+        securityUsers = new UserDao().findByAccess(EUserType.STAFF);
 
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Account Disabled"));
@@ -1024,6 +1065,30 @@ public class AdminModel {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public Security getSecurity() {
+        return security;
+    }
+
+    public void setSecurity(Security security) {
+        this.security = security;
+    }
+
+    public List<Security> getSecurits() {
+        return securits;
+    }
+
+    public void setSecurits(List<Security> securits) {
+        this.securits = securits;
+    }
+
+    public List<User> getSecurityUsers() {
+        return securityUsers;
+    }
+
+    public void setSecurityUsers(List<User> securityUsers) {
+        this.securityUsers = securityUsers;
     }
 
 }

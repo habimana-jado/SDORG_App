@@ -39,6 +39,9 @@ public class User implements Serializable{
     @OneToOne
     private Visitor visitor;
 
+    @OneToOne
+    private Security security;
+    
     public String getUserId() {
         return userId;
     }
@@ -117,6 +120,14 @@ public class User implements Serializable{
 
     public void setVisitor(Visitor visitor) {
         this.visitor = visitor;
+    }
+
+    public Security getSecurity() {
+        return security;
+    }
+
+    public void setSecurity(Security security) {
+        this.security = security;
     }
     
     

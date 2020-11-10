@@ -32,6 +32,7 @@ public class Device implements Serializable{
     private final Date registrationDate = new Date();
     @Enumerated(EnumType.STRING)
     private EMovementStatus movementStatus;
+    private String rfid;
     
     @OneToMany(mappedBy = "device", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
@@ -120,6 +121,14 @@ public class Device implements Serializable{
 
     public Date getRegistrationDate() {
         return registrationDate;
+    }
+
+    public String getRfid() {
+        return rfid;
+    }
+
+    public void setRfid(String rfid) {
+        this.rfid = rfid;
     }
 
 }

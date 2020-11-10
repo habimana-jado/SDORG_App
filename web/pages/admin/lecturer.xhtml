@@ -102,7 +102,7 @@
                 </div>
                 <!-- #User Info -->
                 <!-- Menu -->
-               <div class="menu" >
+                <div class="menu" >
                     <ul class="list">
                         <li class="header">MENU</li>
                         <li>
@@ -125,6 +125,12 @@
                             </a>
                         </li>
                         <li>
+                            <a href="addstaff.xhtml.xhtml">
+                                <i class="material-icons">school</i>
+                                <span>Add Staff</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="addstudent.xhtml">
                                 <i class="material-icons">group_add</i>
                                 <span>Add Student</span>
@@ -139,7 +145,7 @@
                         <li>
                             <a href="lecturer.xhtml">
                                 <i class="material-icons">group</i>
-                                <span>Lecturer/Student</span>
+                                <span>Lecturer/Staff/Student</span>
                             </a>
                         </li>
                     </ul>
@@ -332,12 +338,64 @@
                             </div>
                         </div>
                     </div>
+                </div><div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2>STAFF LIST</h2>
+                            </div>
+                            <div>
+                                <div>
+                                    <p:growl />
+                                    <!--<h3>Member Information</h3>-->
+                                    <table class="table table-bordered table-striped table-hover dataTable">
+                                        <thead class="bg-light">
+                                            <tr class="border-0">
+                                                <th class="border-0">#</th>
+                                                <th class="border-0">National ID</th>
+                                                <th class="border-0">Names</th>
+                                                <th class="border-0">Phone Number</th>
+                                                <th class="border-0">Email</th>
+                                                <th class="border-0">Gender</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="#{adminModel.securits}" var="elements" varStatus="status">
+                                                <tr>
+                                                    <td>${status.index+1}</td>
+                                                    <td>
+                                                        #{elements.nationalId}
+                                                    </td>
+                                                    <td>
+                                                        #{elements.firstName} #{elements.lastName}
+                                                    </td>
+                                                    <td>
+                                                        #{elements.phone}
+                                                    </td>
+
+                                                    <td>
+                                                        #{elements.email}
+                                                    </td>
+                                                    <td>
+                                                        #{elements.gender}
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Default Size -->
+
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row clearfix">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card">
                             <div class="header">
-                                <h2>STAFF LIST</h2>
+                                <h2>SECURITY LIST</h2>
                             </div>
                             <div>
                                 <div>

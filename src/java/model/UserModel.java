@@ -52,8 +52,8 @@ public class UserModel {
                     return "pages/admin/dashboard.xhtml?faces-redirect=true";
                 case SECURITY:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
-                    ec.redirect(ec.getRequestContextPath() + "/pages/security/visitors.xhtml");
-                    return "pages/security/visitors.xhtml?faces-redirect=true";
+                    ec.redirect(ec.getRequestContextPath() + "/pages/security/search.xhtml");
+                    return "pages/security/search.xhtml?faces-redirect=true";
                 case LECTURER:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
                     ec.redirect(ec.getRequestContextPath() + "/pages/lecturer/devices.xhtml");
@@ -62,6 +62,10 @@ public class UserModel {
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
                     ec.redirect(ec.getRequestContextPath() + "/pages/student/devices.xhtml");
                     return "pages/student/devices.xhtml?faces-redirect=true";
+                case STAFF:
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
+                    ec.redirect(ec.getRequestContextPath() + "/pages/staff/devices.xhtml");
+                    return "pages/staff/devices.xhtml?faces-redirect=true";
                 default:
                     user = null;
 

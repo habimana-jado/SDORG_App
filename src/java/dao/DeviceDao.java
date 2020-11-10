@@ -16,4 +16,13 @@ public class DeviceDao extends GenericDao<Device>{
         s.close();
         return list;
     }
+    
+    public Device findByRfid(String x){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Device a WHERE a.rfid = :x");
+        q.setParameter("x", x);
+        Device list = (Device) q.uniqueResult();
+        s.close();
+        return list;
+    }
 }
