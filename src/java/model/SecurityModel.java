@@ -73,7 +73,6 @@ public class SecurityModel {
     private boolean alerted = Boolean.FALSE;
     private String rfid = new String();
     private Device chosenDevice = new Device();
-    
 
     @PostConstruct
     public void init() {
@@ -136,19 +135,35 @@ public class SecurityModel {
             e.printStackTrace();
         }
     }
-    public void searchByRfid(){
+
+    public void searchByRfid() {
         chosenDevice = new DeviceDao().findByRfid(rfid);
-        System.out.println(chosenDevice.getDeviceName()+" = chosen Device");
-        chosenAccusation = new AccusationDao().findByDeviceAndStatus(chosenDevice);
-        System.out.println(chosenAccusation.getReportingPeriod()+" = Chosen Accusation");
-        if (chosenAccusation == null) {
+        if (chosenDevice == null || chosenDevice.equals(null) || chosenDevice.equals("")) {
+            alertMessage = "No device with such RFID Found";
+            alerted = Boolean.FALSE;
+        } else if (chosenAccusation == null || chosenAccusation.equals(null) || chosenAccusation.equals("")) {
             alertMessage = "This device is free to enter";
             alerted = Boolean.FALSE;
         } else {
-            alertMessage = "This device is alerted in Complaints";
-            alerted = Boolean.TRUE;
+            System.out.println(chosenDevice.getDeviceName() + " = chosen Device");
+            chosenAccusation = new AccusationDao().findByDeviceAndStatus(chosenDevice);
+            System.out.println(chosenAccusation.getReportingPeriod() + " = Chosen Accusation");
+            if (chosenAccusation == null) {
+                alertMessage = "This device is free to enter";
+                alerted = Boolean.FALSE;
+            } else {
+                alertMessage = "This device is alerted in Complaints";
+                alerted = Boolean.TRUE;
+            }
+            System.out.println(alertMessage + " = Alerted Message");
         }
-        System.out.println(alertMessage+" = Alerted Message");
+    }
+
+    public void updateRfid() {
+        new DeviceDao().update(chosenDevice);
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Device RFID Updated"));
     }
 
     public String navigateToRegisterVisitorDevice(Person person) {
@@ -159,6 +174,7 @@ public class SecurityModel {
 
     public String navigateToDevice(DeviceImage device) {
         chosenDeviceImage = device;
+        chosenDevice = device.getDevice();
         chosenAccusation = new AccusationDao().findByDeviceAndStatus(device.getDevice());
         if (chosenAccusation == null) {
             alertMessage = "This device is free to enter";
@@ -217,7 +233,7 @@ public class SecurityModel {
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Device Checked-In"));
     }
-    
+
     public void checkInDeviceByRFID() {
         Movement movement = new Movement();
         movement.setDevice(chosenDevice);

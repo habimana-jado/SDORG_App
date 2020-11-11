@@ -194,7 +194,7 @@
                                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
                                             <div class="form-group">
                                                 <div class="form-line">
-                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDeviceImage.device.serialNumber}"/>
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDevice.serialNumber}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -206,7 +206,7 @@
                                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
                                             <div class="form-group">
                                                 <div class="form-line">
-                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDeviceImage.device.deviceName}"/>
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDevice.deviceName}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -218,7 +218,19 @@
                                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
                                             <div class="form-group">
                                                 <div class="form-line">
-                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDeviceImage.device.deviceType}"/>
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDevice.deviceType}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Device RFID No.</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText class="form-control" value="#{securityModel.chosenDevice.rfid}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -226,10 +238,15 @@
 
                                     <div class="row clearfix">
                                         <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                                            <h:commandButton value="Submit" action="#{securityModel.checkInDevice()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
+                                            <h:commandButton value="Check In" action="#{securityModel.checkInDevice()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
                                         </div>
                                     </div>
 
+                                    <div class="row clearfix">
+                                        <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
+                                            <h:commandButton value="Update RFID" action="#{securityModel.updateRfid()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
+                                        </div>
+                                    </div>
                                 </h:form>
                             </div>
                         </div>
