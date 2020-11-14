@@ -26,13 +26,13 @@ import org.primefaces.event.FileUploadEvent;
 public class StaffModel {
 
     private User loggedInUser = (User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
-    private List<DeviceImage> myDevices = new DeviceImageDao().findByPerson(loggedInUser.getStaff());
+    private List<DeviceImage> myDevices = new DeviceImageDao().findByPerson(loggedInUser.getSecurity());
     private Device device = new Device();
     private List<String> chosenImage = new ArrayList<>();
-    private List<Accusation> accusations = new AccusationDao().findByStaff(loggedInUser.getStaff());
+    private List<Accusation> accusations = new AccusationDao().findBySecurity(loggedInUser.getSecurity());
     private Accusation accusation = new Accusation();
     private Movement movement = new Movement();
-    private List<Movement> movements = new MovementDao().findByStaff(loggedInUser.getStaff());
+    private List<Movement> movements = new MovementDao().findBySecurity(loggedInUser.getSecurity());
     private String movementId = new String();
     private Movement chosenMovement = new Movement();
     private String newDate = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
@@ -43,62 +43,87 @@ public class StaffModel {
             accusation.setMovement(chosenMovement);
             accusation.setReportingPeriod(new Date());
             new AccusationDao().register(accusation);
-            accusations = new AccusationDao().findByStaff(loggedInUser.getStaff());
+            accusations = new AccusationDao().findBySecurity(loggedInUser.getSecurity());
             accusation = new Accusation();
 
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Complaint Raised"));
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public void resolveAccusation(Accusation accusation){
+
+    public String navigateEdit(DeviceImage d) {
+        device = d.getDevice();
+        return "adddevice.xhtml?faces-redirect=true";
+    }
+
+    public void resolveAccusation(Accusation accusation) {
         try {
             accusation.setStatus("Resolved");
             accusation.setResolvedPeriod(new Date());
             new AccusationDao().update(accusation);
-            accusations = new AccusationDao().findByStaff(loggedInUser.getStaff());
-            
+            accusations = new AccusationDao().findBySecurity(loggedInUser.getSecurity());
+
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Complaint Resolved"));
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public void chooseMovement(Movement movement){
+
+    public void chooseMovement(Movement movement) {
         chosenMovement = movement;
     }
-    
+
     public void registerStaffDevice() {
-        try {
-            if (chosenImage.isEmpty()) {
-                FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage("Upload Profile Image"));
-            } else {
-                device.setMovementStatus(EMovementStatus.CHECKED_OUT);
-                device.setPerson(loggedInUser.getStaff());
-                new DeviceDao().register(device);
+        if (new DeviceDao().findOne(Device.class, device.getDeviceId()) != null) {
+            try {
+                device.setUpdatedBy(loggedInUser.getSecurity());
+                device.setDateUpdated(new Date());
+                new DeviceDao().update(device);
 
-                myDevices = new DeviceImageDao().findByStaff(loggedInUser.getStaff());
-
-                DeviceImage deviceImage = new DeviceImage();
-                for (String x : chosenImage) {
-                    deviceImage.setPath(x);
-                    deviceImage.setDevice(device);
-                    new DeviceImageDao().register(deviceImage);
-                }
-                chosenImage.clear();
+                myDevices = new DeviceImageDao().findByPerson(loggedInUser.getSecurity());
 
                 FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage("Device Registered"));
+                fc.addMessage(null, new FacesMessage("Device Updated"));
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        } else {
+            try {
+                if (chosenImage.isEmpty()) {
+                    FacesContext fc = FacesContext.getCurrentInstance();
+                    fc.addMessage(null, new FacesMessage("Upload Profile Image"));
+                } else {
+                    device.setMovementStatus(EMovementStatus.CHECKED_OUT);
+                    device.setPerson(loggedInUser.getSecurity());
+                    device.setCreatedBy(loggedInUser.getSecurity());
+                    device.setDateCreated(new Date());
+                    device.setUpdatedBy(loggedInUser.getSecurity());
+                    device.setDateUpdated(new Date());
+                    new DeviceDao().register(device);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                    myDevices = new DeviceImageDao().findByPerson(loggedInUser.getSecurity());
+
+                    DeviceImage deviceImage = new DeviceImage();
+                    for (String x : chosenImage) {
+                        deviceImage.setPath(x);
+                        deviceImage.setDevice(device);
+                        new DeviceImageDao().register(deviceImage);
+                    }
+                    chosenImage.clear();
+
+                    FacesContext fc = FacesContext.getCurrentInstance();
+                    fc.addMessage(null, new FacesMessage("Device Registered"));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -193,6 +218,5 @@ public class StaffModel {
     public void setNewDate(String newDate) {
         this.newDate = newDate;
     }
-    
 
 }

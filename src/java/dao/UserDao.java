@@ -3,6 +3,11 @@ package dao;
 
 import common.PassCode;
 import domain.EUserType;
+import domain.Lecturer;
+import domain.Person;
+import domain.Security;
+import domain.Staff;
+import domain.Student;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +57,42 @@ public class UserDao extends GenericDao<User>{
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM User a WHERE a.username = :x");
         q.setParameter("x", username);
+        User u = (User) q.uniqueResult();
+        s.close();
+        return u;
+    }
+    
+    public User findByStudent(Student p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM User a WHERE a.student = :x");
+        q.setParameter("x", p);
+        User u = (User) q.uniqueResult();
+        s.close();
+        return u;
+    }
+     
+    public User findByLecturer(Lecturer p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM User a WHERE a.lecturer = :x");
+        q.setParameter("x", p);
+        User u = (User) q.uniqueResult();
+        s.close();
+        return u;
+    }
+    
+    public User findByStaff(Staff p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM User a WHERE a.staff = :x");
+        q.setParameter("x", p);
+        User u = (User) q.uniqueResult();
+        s.close();
+        return u;
+    }
+     
+    public User findBySecurity(Security p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM User a WHERE a.security = :x");
+        q.setParameter("x", p);
         User u = (User) q.uniqueResult();
         s.close();
         return u;

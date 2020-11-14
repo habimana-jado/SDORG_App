@@ -210,47 +210,65 @@
                             </div>
                             <div>
                                 <div>
+                                    <div class="row">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-3">
+                                            <h:form>
+                                                <p:inputText id="itemId" value="#{adminModel.searchKey}" class="form-control" >
+                                                    <p:ajax event="keyup" listener="#{adminModel.searchLecturer()}" update="lecturerTable"/>           
+                                                </p:inputText>
+                                            </h:form>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
                                     <p:growl />
                                     <!--<h3>Member Information</h3>-->
-                                    <table class="table table-bordered table-striped table-hover dataTable">
-                                        <thead class="bg-light">
-                                            <tr class="border-0">
-                                                <th class="border-0">#</th>
-                                                <th class="border-0">National ID</th>
-                                                <th class="border-0">Names</th>
-                                                <th class="border-0">Phone Number</th>
-                                                <th class="border-0">Email</th>
-                                                <th class="border-0">Gender</th>
-                                                <th class="border-0">Faculty</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="#{adminModel.lecturers}" var="elements" varStatus="status">
-                                                <tr>
-                                                    <td>${status.index+1}</td>
-                                                    <td>
-                                                        #{elements.nationalId}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.firstName} #{elements.lastName}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.phone}
-                                                    </td>
-
-                                                    <td>
-                                                        #{elements.email}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.gender}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.faculty.name}
-                                                    </td>
+                                    <h:form id="lecturerTable">
+                                        <table class="table table-bordered table-striped table-hover dataTable">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">#</th>
+                                                    <th class="border-0">National ID</th>
+                                                    <th class="border-0">Names</th>
+                                                    <th class="border-0">Phone Number</th>
+                                                    <th class="border-0">Email</th>
+                                                    <th class="border-0">Gender</th>
+                                                    <th class="border-0">Faculty</th>
+                                                    <th class="border-0">Action</th>
                                                 </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="#{adminModel.lecturers}" var="elements" varStatus="status">
+                                                    <tr>
+                                                        <td>${status.index+1}</td>
+                                                        <td>
+                                                            #{elements.nationalId}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.firstName} #{elements.lastName}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.phone}
+                                                        </td>
+
+                                                        <td>
+                                                            #{elements.email}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.gender}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.faculty.name}
+                                                        </td>
+                                                        <td>
+                                                            <h:commandButton class="btn btn-success" value="Edit" action="#{adminModel.navigateEditLecturer(elements)}" />
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </h:form>
                                 </div>
                                 <!-- Default Size -->
                             </div>
@@ -294,43 +312,61 @@
                             </div>
                             <div>
                                 <div>
+                                    <div class="row">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-3">
+                                            <h:form>
+                                                <p:inputText id="itemId" value="#{adminModel.searchKey}" class="form-control" >
+                                                    <p:ajax event="keyup" listener="#{adminModel.searchStudent()}" update="studentTable"/>           
+                                                </p:inputText>
+                                            </h:form>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
                                     <p:growl />
                                     <!--<h3>Member Information</h3>-->
-                                    <table class="table table-bordered table-striped table-hover dataTable">
-                                        <thead class="bg-light">
-                                            <tr class="border-0">
-                                                <th class="border-0">#</th>
-                                                <th class="border-0">National ID</th>
-                                                <th class="border-0">Names</th>
-                                                <th class="border-0">Phone Number</th>
-                                                <th class="border-0">Email</th>
-                                                <th class="border-0">Gender</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="#{adminModel.students}" var="elements" varStatus="status">
-                                                <tr>
-                                                    <td>${status.index+1}</td>
-                                                    <td>
-                                                        #{elements.nationalId}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.firstName} #{elements.lastName}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.phone}
-                                                    </td>
-
-                                                    <td>
-                                                        #{elements.email}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.gender}
-                                                    </td>
+                                    <h:form id="studentTable">
+                                        <table class="table table-bordered table-striped table-hover dataTable">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">#</th>
+                                                    <th class="border-0">National ID</th>
+                                                    <th class="border-0">Names</th>
+                                                    <th class="border-0">Phone Number</th>
+                                                    <th class="border-0">Email</th>
+                                                    <th class="border-0">Gender</th>
+                                                    <th class="border-0">Action</th>
                                                 </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach id="studentTable" items="#{adminModel.students}" var="elements" varStatus="status">
+                                                    <tr>
+                                                        <td>${status.index+1}</td>
+                                                        <td>
+                                                            #{elements.nationalId}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.firstName} #{elements.lastName}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.phone}
+                                                        </td>
+
+                                                        <td>
+                                                            #{elements.email}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.gender}
+                                                        </td>
+                                                        <td>
+                                                            <h:commandButton class="btn btn-danger" value="Edit" action="#{adminModel.navigateEditStudent(elements)}" />
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </h:form>
                                 </div>
                                 <!-- Default Size -->
 
@@ -357,6 +393,7 @@
                                                 <th class="border-0">Phone Number</th>
                                                 <th class="border-0">Email</th>
                                                 <th class="border-0">Gender</th>
+                                                <th class="border-0">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -379,6 +416,11 @@
                                                     <td>
                                                         #{elements.gender}
                                                     </td>
+                                                    <td>
+                                                        <h:form>
+                                                            <h:commandButton class="btn btn-danger" value="Edit" action="#{adminModel.navigateEditStaff(elements)}" />
+                                                        </h:form>
+                                                    </td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
@@ -398,45 +440,51 @@
                                 <h2>SECURITY LIST</h2>
                             </div>
                             <div>
-                                <div>
-                                    <p:growl />
-                                    <!--<h3>Member Information</h3>-->
-                                    <table class="table table-bordered table-striped table-hover dataTable">
-                                        <thead class="bg-light">
-                                            <tr class="border-0">
-                                                <th class="border-0">#</th>
-                                                <th class="border-0">National ID</th>
-                                                <th class="border-0">Names</th>
-                                                <th class="border-0">Phone Number</th>
-                                                <th class="border-0">Email</th>
-                                                <th class="border-0">Gender</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="#{adminModel.staffs}" var="elements" varStatus="status">
-                                                <tr>
-                                                    <td>${status.index+1}</td>
-                                                    <td>
-                                                        #{elements.nationalId}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.firstName} #{elements.lastName}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.phone}
-                                                    </td>
-
-                                                    <td>
-                                                        #{elements.email}
-                                                    </td>
-                                                    <td>
-                                                        #{elements.gender}
-                                                    </td>
+                                <h:form>
+                                    <div>
+                                        <p:growl />
+                                        <!--<h3>Member Information</h3>-->
+                                        <table class="table table-bordered table-striped table-hover dataTable">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">#</th>
+                                                    <th class="border-0">National ID</th>
+                                                    <th class="border-0">Names</th>
+                                                    <th class="border-0">Phone Number</th>
+                                                    <th class="border-0">Email</th>
+                                                    <th class="border-0">Gender</th>
+                                                    <th class="border-0">Action</th>
                                                 </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="#{adminModel.staffs}" var="elements" varStatus="status">
+                                                    <tr>
+                                                        <td>${status.index+1}</td>
+                                                        <td>
+                                                            #{elements.nationalId}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.firstName} #{elements.lastName}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.phone}
+                                                        </td>
+
+                                                        <td>
+                                                            #{elements.email}
+                                                        </td>
+                                                        <td>
+                                                            #{elements.gender}
+                                                        </td>
+                                                        <td>
+                                                            <h:commandButton class="btn btn-danger" value="Edit" action="#{adminModel.navigateEditSecurity(elements)}" />
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </h:form>
                                 <!-- Default Size -->
 
 

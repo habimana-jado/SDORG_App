@@ -5,13 +5,15 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Accusation implements Serializable{
+@EntityListeners(AuditableListener.class)
+public class Accusation implements Serializable, Auditable{
     @Id
     private String accusationId = UUID.randomUUID().toString();
     private String comment;
@@ -20,6 +22,12 @@ public class Accusation implements Serializable{
     private Date reportingPeriod;
     @Temporal(TemporalType.TIMESTAMP)
     private Date resolvedPeriod;
+    private Date dateCreated;
+    private Date dateupdated;
+    @ManyToOne
+    private Person createdBy;
+    @ManyToOne
+    private Person updatedBy;
    
     @ManyToOne
     private Movement movement;
@@ -70,6 +78,42 @@ public class Accusation implements Serializable{
 
     public void setResolvedPeriod(Date resolvedPeriod) {
         this.resolvedPeriod = resolvedPeriod;
+    }
+
+    @Override
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    @Override
+    public Date getDateUpdated() {
+        return dateupdated;
+    }
+
+    @Override
+    public void setDateUpdated(Date lastUpdated) {
+        this.dateupdated = lastUpdated;
+    }
+
+    public Person getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Person createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Person getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Person updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     

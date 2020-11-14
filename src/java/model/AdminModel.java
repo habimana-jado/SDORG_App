@@ -33,6 +33,7 @@ import domain.EUserType;
 import domain.Faculty;
 import domain.Lecturer;
 import domain.Movement;
+import domain.Person;
 import domain.Security;
 import domain.Staff;
 import domain.Student;
@@ -117,6 +118,7 @@ public class AdminModel {
     private PieChartModel pieModel2;
     private String from;
     private String to;
+    private String searchKey = new String();
     private final List<Movement> movements = new MovementDao().findByUniversityLogged(loggedInUser.getAdmin().getUniversity());
     private final List<Accusation> accusations = new AccusationDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
 
@@ -202,8 +204,31 @@ public class AdminModel {
 
     public void registerStudent() throws Exception {
         if (new StudentDao().findOne(Student.class, student.getNationalId()) != null) {
+            for (String x : chosenImage) {
+                student.setProfilePicture(x);
+            }
+            chosenImage.clear();
+            Department department = new DepartmentDao().findOne(Department.class, departmentId);
+            student.setDepartment(department);
+            if (gender.matches("Male")) {
+                student.setGender(EGender.MALE);
+            } else {
+                student.setGender(EGender.FEMALE);
+            }
+            student.setPersonType("Student");
+            new StudentDao().update(student);
+
+            user.setStudent(student);
+            user.setStatus(EStatus.ACTIVE);
+            user.setUserType(EUserType.STUDENT);
+            user.setPassword(new PassCode().encrypt(password));
+            new UserDao().update(user);
+            user = new User();
+            student = new Student();
+            students = new StudentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+
             FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("National ID already used"));
+            fc.addMessage(null, new FacesMessage("Student Registered"));
         } else if (new UserDao().usernameExist(user.getUsername())) {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Username already exists"));
@@ -243,8 +268,37 @@ public class AdminModel {
 
     public void registerLecturer() throws Exception {
         if (new LecturerDao().findOne(Lecturer.class, lecturer.getNationalId()) != null) {
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("National ID already used"));
+
+            if (chosenImage.isEmpty()) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Upload Profile Image"));
+            } else {
+                for (String x : chosenImage) {
+                    lecturer.setProfilePicture(x);
+                }
+                chosenImage.clear();
+                Faculty fac = new FacultyDao().findOne(Faculty.class, facultyId);
+                lecturer.setFaculty(fac);
+                if (gender.matches("Male")) {
+                    lecturer.setGender(EGender.MALE);
+                } else {
+                    lecturer.setGender(EGender.FEMALE);
+                }
+                lecturer.setPersonType("Lecturer");
+                new LecturerDao().update(lecturer);
+
+                user.setLecturer(lecturer);
+                user.setStatus(EStatus.ACTIVE);
+                user.setUserType(EUserType.LECTURER);
+                user.setPassword(new PassCode().encrypt(password));
+                new UserDao().update(user);
+                user = new User();
+                lecturer = new Lecturer();
+                lecturers = new LecturerDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Lecturer Updated"));
+            }
         } else {
 
             if (chosenImage.isEmpty()) {
@@ -284,72 +338,141 @@ public class AdminModel {
     }
 
     public void registerSecurityGuard() throws Exception {
-        if (chosenImage.isEmpty()) {
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("Upload Profile Image"));
-        } else if (new UserDao().usernameExist(user.getUsername())) {
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("Username already exists"));
-        } else {
-            for (String x : chosenImage) {
-                staff.setProfilePicture(x);
-            }
-            chosenImage.clear();
-            staff.setUniversity(loggedInUser.getAdmin().getUniversity());
-            if (gender.matches("Male")) {
-                student.setGender(EGender.MALE);
+        if (new StaffDao().findOne(Staff.class, staff.getNationalId()) != null) {
+
+            if (chosenImage.isEmpty()) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Upload Profile Image"));
             } else {
-                student.setGender(EGender.FEMALE);
+                for (String x : chosenImage) {
+                    staff.setProfilePicture(x);
+                }
+                chosenImage.clear();
+                staff.setUniversity(loggedInUser.getAdmin().getUniversity());
+                if (gender.matches("Male")) {
+                    staff.setGender(EGender.MALE);
+                } else {
+                    staff.setGender(EGender.FEMALE);
+                }
+                staff.setPersonType("Security Guard");
+                new StaffDao().update(staff);
+
+                user.setStaff(staff);
+                user.setStatus(EStatus.ACTIVE);
+                user.setUserType(EUserType.SECURITY);
+                user.setPassword(new PassCode().encrypt(password));
+                new UserDao().update(user);
+                user = new User();
+                staff = new Staff();
+                staffs = new StaffDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Security Guard Updated"));
             }
-            staff.setPersonType("Staff");
-            new StaffDao().register(staff);
+        } else {
 
-            user.setStaff(staff);
-            user.setStatus(EStatus.ACTIVE);
-            user.setUserType(EUserType.SECURITY);
-            user.setPassword(new PassCode().encrypt(password));
-            new UserDao().register(user);
-            user = new User();
-            staff = new Staff();
-            staffs = new StaffDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+            if (chosenImage.isEmpty()) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Upload Profile Image"));
+            } else if (new UserDao().usernameExist(user.getUsername())) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Username already exists"));
+            } else {
+                for (String x : chosenImage) {
+                    staff.setProfilePicture(x);
+                }
+                chosenImage.clear();
+                staff.setUniversity(loggedInUser.getAdmin().getUniversity());
+                if (gender.matches("Male")) {
+                    staff.setGender(EGender.MALE);
+                } else {
+                    staff.setGender(EGender.FEMALE);
+                }
+                staff.setPersonType("Security Guard");
+                new StaffDao().register(staff);
 
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("Security Guard Registered"));
+                user.setStaff(staff);
+                user.setStatus(EStatus.ACTIVE);
+                user.setUserType(EUserType.SECURITY);
+                user.setPassword(new PassCode().encrypt(password));
+                new UserDao().register(user);
+                user = new User();
+                staff = new Staff();
+                staffs = new StaffDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Security Guard Registered"));
+            }
         }
     }
 
     public void registerStaff() throws Exception {
-        if (chosenImage.isEmpty()) {
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("Upload Profile Image"));
-        } else if (new UserDao().usernameExist(user.getUsername())) {
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("Username already exists"));
-        } else {
-            for (String x : chosenImage) {
-                security.setProfilePicture(x);
-            }
-            chosenImage.clear();
-            security.setUniversity(loggedInUser.getAdmin().getUniversity());
-            if (gender.matches("Male")) {
-                security.setGender(EGender.MALE);
+        if (new SecurityDao().findOne(Security.class, security.getNationalId()) != null) {
+
+            if (chosenImage.isEmpty()) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Upload Profile Image"));
             } else {
-                security.setGender(EGender.FEMALE);
+                for (String x : chosenImage) {
+                    security.setProfilePicture(x);
+                }
+                chosenImage.clear();
+                security.setUniversity(loggedInUser.getAdmin().getUniversity());
+                if (gender.matches("Male")) {
+                    security.setGender(EGender.MALE);
+                } else {
+                    security.setGender(EGender.FEMALE);
+                }
+                security.setPersonType("Staff");
+                new SecurityDao().update(security);
+
+                user.setSecurity(security);
+                user.setStatus(EStatus.ACTIVE);
+                user.setUserType(EUserType.STAFF);
+                user.setPassword(new PassCode().encrypt(password));
+                new UserDao().update(user);
+                user = new User();
+                security = new Security();
+                securits = new SecurityDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Staff Registered"));
             }
-            security.setPersonType("Security");
-            new SecurityDao().register(security);
 
-            user.setSecurity(security);
-            user.setStatus(EStatus.ACTIVE);
-            user.setUserType(EUserType.STAFF);
-            user.setPassword(new PassCode().encrypt(password));
-            new UserDao().register(user);
-            user = new User();
-            security = new Security();
-            securits = new SecurityDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+        } else {
 
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("Staff Registered"));
+            if (chosenImage.isEmpty()) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Upload Profile Image"));
+            } else if (new UserDao().usernameExist(user.getUsername())) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Username already exists"));
+            } else {
+                for (String x : chosenImage) {
+                    security.setProfilePicture(x);
+                }
+                chosenImage.clear();
+                security.setUniversity(loggedInUser.getAdmin().getUniversity());
+                if (gender.matches("Male")) {
+                    security.setGender(EGender.MALE);
+                } else {
+                    security.setGender(EGender.FEMALE);
+                }
+                security.setPersonType("Staff");
+                new SecurityDao().register(security);
+
+                user.setSecurity(security);
+                user.setStatus(EStatus.ACTIVE);
+                user.setUserType(EUserType.STAFF);
+                user.setPassword(new PassCode().encrypt(password));
+                new UserDao().register(user);
+                user = new User();
+                security = new Security();
+                securits = new SecurityDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Staff Registered"));
+            }
         }
     }
 
@@ -367,6 +490,60 @@ public class AdminModel {
         fc.addMessage(null, new FacesMessage("Account Disabled"));
     }
 
+    public void enable(User user) {
+        user.setStatus(EStatus.ACTIVE);
+        new UserDao().update(user);
+
+        studentUsers = new UserDao().findByAccess(EUserType.STUDENT);
+        staffUsers = new UserDao().findByAccess(EUserType.SECURITY);
+        lecturerUsers = new UserDao().findByAccess(EUserType.LECTURER);
+        adminUsers = new UserDao().findByAccess(EUserType.ADMIN);
+        securityUsers = new UserDao().findByAccess(EUserType.STAFF);
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Account Enabled"));
+    }
+
+    public String navigateEditStudent(Student p) {
+        student = p;
+        user = new UserDao().findByStudent(p);
+        return "addstudent.xhtml?faces-redirect=true";
+    }
+
+    public String navigateEditLecturer(Lecturer p) {
+        lecturer = p;
+        user = new UserDao().findByLecturer(p);
+        return "addlecturer.xhtml?faces-redirect=true";
+    }
+
+    public String navigateEditStaff(Security p) {
+        security = p;
+        user = new UserDao().findBySecurity(p);
+        return "addstaff.xhtml?faces-redirect=true";
+    }
+
+    public String navigateEditSecurity(Staff p) {
+        staff = p;
+        user = new UserDao().findByStaff(p);
+        return "addsecurity.xhtml?faces-redirect=true";
+    }
+
+    public void searchLecturer() {
+        if (searchKey.isEmpty() || searchKey == null) {
+            lecturers = new LecturerDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+        } else {
+            lecturers = new LecturerDao().findByUniversityAndNames(loggedInUser.getAdmin().getUniversity(), searchKey.toUpperCase());
+        }
+    }
+
+    public void searchStudent() {
+        if (searchKey.isEmpty() || searchKey == null) {
+             students = new StudentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+        } else {
+            students = new StudentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+        }
+    }
+    
     public String UploadStudent(FileUploadEvent event) {
         try {
             uploadedFileName = UUID.randomUUID().toString().substring(1, 5) + event.getFile().getFileName();
@@ -1089,6 +1266,14 @@ public class AdminModel {
 
     public void setSecurityUsers(List<User> securityUsers) {
         this.securityUsers = securityUsers;
+    }
+
+    public String getSearchKey() {
+        return searchKey;
+    }
+
+    public void setSearchKey(String searchKey) {
+        this.searchKey = searchKey;
     }
 
 }

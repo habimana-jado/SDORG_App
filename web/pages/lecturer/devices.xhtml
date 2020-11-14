@@ -101,9 +101,9 @@
                     <ul class="list">
                         <li class="header">MENU</li>
                         <li>
-                            <a href="#">
+                            <a href="audit.xhtml">
                                 <i class="material-icons">home</i>
-                                <span>Dashboard</span>
+                                <span>Audits</span>
                             </a>
                         </li>
                         <li>
@@ -189,7 +189,7 @@
 
                                             <div class="text-right">
                                                 <h:form>
-                                                    <h:commandButton class="btn btn-primary" value="Update" />
+                                                    <h:commandButton action="#{lecturerModel.navigateEdit(elements)}" class="btn btn-primary" value="Update" />
                                                 </h:form>
                                             </div>
                                         </fieldset>

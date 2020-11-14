@@ -48,57 +48,82 @@ public class StudentModel {
 
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Complaint Raised"));
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public void resolveAccusation(Accusation accusation){
+
+    public void resolveAccusation(Accusation accusation) {
         try {
             accusation.setStatus("Resolved");
             accusation.setResolvedPeriod(new Date());
             new AccusationDao().update(accusation);
             accusations = new AccusationDao().findByStudent(loggedInUser.getStudent());
-            
+
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Complaint Resolved"));
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public void chooseMovement(Movement movement){
+
+    public void chooseMovement(Movement movement) {
         chosenMovement = movement;
     }
-    
+
+    public String navigateEdit(DeviceImage d) {
+        device = d.getDevice();
+        return "adddevice.xhtml?faces-redirect=true";
+    }
+
     public void registerStudentDevice() {
-        try {
-            if (chosenImage.isEmpty()) {
-                FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage("Upload Profile Image"));
-            } else {
-                device.setMovementStatus(EMovementStatus.CHECKED_OUT);
-                device.setPerson(loggedInUser.getStudent());
-                new DeviceDao().register(device);
+        if (new DeviceDao().findOne(Device.class, device.getDeviceId()) != null) {
+            try {
+                device.setUpdatedBy(loggedInUser.getSecurity());
+                device.setDateUpdated(new Date());
+                new DeviceDao().update(device);
 
                 myDevices = new DeviceImageDao().findByStudent(loggedInUser.getStudent());
 
-                DeviceImage deviceImage = new DeviceImage();
-                for (String x : chosenImage) {
-                    deviceImage.setPath(x);
-                    deviceImage.setDevice(device);
-                    new DeviceImageDao().register(deviceImage);
-                }
-                chosenImage.clear();
-
                 FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage("Device Registered"));
-            }
+                fc.addMessage(null, new FacesMessage("Device Updated"));
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                if (chosenImage.isEmpty()) {
+                    FacesContext fc = FacesContext.getCurrentInstance();
+                    fc.addMessage(null, new FacesMessage("Upload Profile Image"));
+                } else {
+                    device.setMovementStatus(EMovementStatus.CHECKED_OUT);
+                    device.setPerson(loggedInUser.getStudent());
+                    device.setCreatedBy(loggedInUser.getSecurity());
+                    device.setDateCreated(new Date());
+                    device.setUpdatedBy(loggedInUser.getSecurity());
+                    device.setDateUpdated(new Date());
+                    new DeviceDao().register(device);
+
+                    myDevices = new DeviceImageDao().findByStudent(loggedInUser.getStudent());
+
+                    DeviceImage deviceImage = new DeviceImage();
+                    for (String x : chosenImage) {
+                        deviceImage.setPath(x);
+                        deviceImage.setDevice(device);
+                        new DeviceImageDao().register(deviceImage);
+                    }
+                    chosenImage.clear();
+
+                    FacesContext fc = FacesContext.getCurrentInstance();
+                    fc.addMessage(null, new FacesMessage("Device Registered"));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -193,6 +218,5 @@ public class StudentModel {
     public void setNewDate(String newDate) {
         this.newDate = newDate;
     }
-    
 
 }

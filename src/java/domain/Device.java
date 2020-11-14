@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -21,7 +22,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 @Entity
-public class Device implements Serializable{
+@EntityListeners(AuditableListener.class)
+public class Device implements Serializable, Auditable{
     @Id
     private String deviceId = UUID.randomUUID().toString();
     private String serialNumber;
@@ -33,6 +35,13 @@ public class Device implements Serializable{
     @Enumerated(EnumType.STRING)
     private EMovementStatus movementStatus;
     private String rfid;
+    private Date dateCreated;
+    private Date dateupdated;
+    @ManyToOne
+    private Person createdBy;
+    @ManyToOne
+    private Person updatedBy;
+   
     
     @OneToMany(mappedBy = "device", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
@@ -131,4 +140,41 @@ public class Device implements Serializable{
         this.rfid = rfid;
     }
 
+    @Override
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    @Override
+    public Date getDateUpdated() {
+        return dateupdated;
+    }
+
+    @Override
+    public void setDateUpdated(Date lastUpdated) {
+        this.dateupdated = lastUpdated;
+    }
+
+    public Person getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Person createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Person getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Person updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+    
+    
 }

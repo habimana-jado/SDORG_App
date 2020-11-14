@@ -1,6 +1,7 @@
 
 package dao;
 
+import domain.Device;
 import domain.DeviceImage;
 import domain.Lecturer;
 import domain.Person;
@@ -49,6 +50,15 @@ public class DeviceImageDao extends GenericDao<DeviceImage>{
     public List<DeviceImage> findByVisitor(Visitor x){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM DeviceImage a WHERE a.device.visitor = :x");
+        q.setParameter("x", x);
+        List<DeviceImage> list = q.list();
+        s.close();
+        return list;
+    }
+    
+    public List<DeviceImage> findByDevice(Device x){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM DeviceImage a WHERE a.device = :x");
         q.setParameter("x", x);
         List<DeviceImage> list = q.list();
         s.close();

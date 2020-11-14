@@ -1,4 +1,3 @@
-
 package model;
 
 import common.FileUpload;
@@ -25,6 +24,7 @@ import org.primefaces.event.FileUploadEvent;
 @ManagedBean
 @SessionScoped
 public class LecturerModel {
+
     private User loggedInUser = (User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
     private List<DeviceImage> myDevices = new DeviceImageDao().findByPerson(loggedInUser.getLecturer());
     private Device device = new Device();
@@ -36,8 +36,7 @@ public class LecturerModel {
     private String movementId = new String();
     private Movement chosenMovement = new Movement();
     private String newDate = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
-    
-    
+
     public void registerAccusation() {
         try {
             accusation.setStatus("Raised");
@@ -49,60 +48,85 @@ public class LecturerModel {
 
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Complaint Raised"));
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public void resolveAccusation(Accusation accusation){
+
+    public String navigateEdit(DeviceImage d) {
+        device = d.getDevice();
+        return "adddevice.xhtml?faces-redirect=true";
+    }
+
+    public void resolveAccusation(Accusation accusation) {
         try {
             accusation.setStatus("Resolved");
             accusation.setResolvedPeriod(new Date());
             new AccusationDao().update(accusation);
             accusations = new AccusationDao().findByLecturer(loggedInUser.getLecturer());
-            
+
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Complaint Resolved"));
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public void chooseMovement(Movement movement){
+
+    public void chooseMovement(Movement movement) {
         chosenMovement = movement;
     }
-    
+
     public void registerLecturerDevice() {
-        try {
-            if (chosenImage.isEmpty()) {
-                FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage("Upload Device Images"));
-            } else {
-                device.setMovementStatus(EMovementStatus.CHECKED_OUT);
-                device.setPerson(loggedInUser.getLecturer());
-                new DeviceDao().register(device);
+        if (new DeviceDao().findOne(Device.class, device.getDeviceId()) != null) {
+            try {
+                    device.setUpdatedBy(loggedInUser.getSecurity());
+                    device.setDateUpdated(new Date());
+                new DeviceDao().update(device);
 
-                myDevices = new DeviceImageDao().findByLecturer(loggedInUser.getLecturer());
-
-                DeviceImage deviceImage = new DeviceImage();
-                for (String x : chosenImage) {
-                    deviceImage.setPath(x);
-                    deviceImage.setDevice(device);
-                    new DeviceImageDao().register(deviceImage);
-                }
-                chosenImage.clear();
+                myDevices = new DeviceImageDao().findByPerson(loggedInUser.getLecturer());
                 
                 FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage("Device Registered"));
-            }
+                fc.addMessage(null, new FacesMessage("Device Updated"));
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                if (chosenImage.isEmpty()) {
+                    FacesContext fc = FacesContext.getCurrentInstance();
+                    fc.addMessage(null, new FacesMessage("Upload Device Images"));
+                } else {
+                    device.setMovementStatus(EMovementStatus.CHECKED_OUT);
+                    device.setPerson(loggedInUser.getLecturer());
+                    device.setCreatedBy(loggedInUser.getSecurity());
+                    device.setDateCreated(new Date());
+                    device.setUpdatedBy(loggedInUser.getSecurity());
+                    device.setDateUpdated(new Date());
+                    new DeviceDao().register(device);
+
+                    myDevices = new DeviceImageDao().findByPerson(loggedInUser.getLecturer());
+                    
+                    DeviceImage deviceImage = new DeviceImage();
+                    for (String x : chosenImage) {
+                        deviceImage.setPath(x);
+                        deviceImage.setDevice(device);
+                        new DeviceImageDao().register(deviceImage);
+                    }
+                    chosenImage.clear();
+
+                    FacesContext fc = FacesContext.getCurrentInstance();
+                    fc.addMessage(null, new FacesMessage("Device Registered"));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-    
+
     public void Upload(FileUploadEvent event) {
         chosenImage.add(new FileUpload().Upload(event, "C:\\Users\\nizey\\OneDrive\\Documents\\NetBeansProjects\\Thesis\\SDORG\\web\\uploads\\device\\"));
     }
@@ -195,5 +219,4 @@ public class LecturerModel {
         this.newDate = newDate;
     }
 
-    
 }

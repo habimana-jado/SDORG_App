@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -18,7 +19,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 @Entity
-public class Movement implements Serializable {
+@EntityListeners(AuditableListener.class)
+public class Movement implements Serializable, Auditable {
     @Id
     private String movementId = UUID.randomUUID().toString();
     @Temporal(TemporalType.TIMESTAMP)
@@ -27,6 +29,13 @@ public class Movement implements Serializable {
     private Date exitTime;
     @Enumerated(EnumType.STRING)
     private EMovementStatus movementStatus;
+    private Date dateCreated;
+    private Date dateupdated;
+    @ManyToOne
+    private Person createdBy;
+    @ManyToOne
+    private Person updatedBy;
+   
     
     @ManyToOne
     private Device device;
@@ -94,6 +103,41 @@ public class Movement implements Serializable {
     public void setAccusation(List<Accusation> accusation) {
         this.accusation = accusation;
     }
-    
+
+    @Override
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Person getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Person createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Person getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Person updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    @Override
+    public Date getDateUpdated() {
+        return dateupdated;
+    }
+
+    @Override
+    public void setDateUpdated(Date lastUpdated) {
+        this.dateupdated = lastUpdated;
+    }
     
 }

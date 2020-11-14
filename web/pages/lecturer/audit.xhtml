@@ -76,10 +76,10 @@
                 <!-- User Info -->
                 <div class="user-info" >
                     <div class="image">
-                        <img src="../../uploads/profile/#{staffModel.loggedInUser.staff.profilePicture}" width="48" height="48" alt="User" />
+                        <img src="../../uploads/profile/#{lecturerModel.loggedInUser.lecturer.profilePicture}" width="48" height="48" alt="User" />
                     </div>
                     <div class="info-container">
-                        <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#{staffModel.loggedInUser.staff.firstName} #{staffModel.loggedInUser.student.lastName}</div>
+                        <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#{lecturerModel.loggedInUser.lecturer.firstName} #{lecturerModel.loggedInUser.lecturer.lastName}</div>
                         <div class="email" ></div>    
                         <div class="btn-group user-helper-dropdown">
                             <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
@@ -151,73 +151,127 @@
             <div class="container-fluid">
                 <div class="block-header">
                     <h2>
-                        My DEVICES
+                        DEVICES AUDIT
                     </h2>
                 </div>
                 <!-- Advanced Form Example With Validation -->
                 <div class="row clearfix">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h:form>
+                            <table class="table table-bordered table-striped table-hover dataTable">
+                                <thead class="bg-light">
+                                    <tr class="border-0">
+                                        <th class="border-0">#</th>
+                                        <th class="border-0">Serial No.</th>
+                                        <th class="border-0">Name</th>
+                                        <th class="border-0">Type</th>
+                                        <th class="border-0">RFID</th>
+                                        <th class="border-0">Date Created</th>
+                                        <th class="border-0">Created By</th>
+                                        <th class="border-0">Date Last Updated</th>
+                                        <th class="border-0">Updated By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="#{staffModel.myDevices}" var="elements" varStatus="status">
+                                        <tr>
+                                            <td>${status.index+1}</td>
+                                            <td>
+                                                #{elements.device.serialNumber}
+                                            </td>
+                                            <td>
+                                                #{elements.device.deviceName}
+                                            </td>
+                                            <td>
+                                                #{elements.device.deviceType}
+                                            </td>
 
-                        <c:forEach items="#{staffModel.accusations}" var="elements" varStatus="status" >
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="card">
-
-                                    <div>
-                                        <p:growl />
-                                        <fieldset>
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h4><label>Device Name:</label> #{elements.movement.device.deviceName}</h4>
-                                                    </div>
-                                                </div>
-                                            </div> 
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div>
-                                                        <h4><label>Device Type:</label> #{elements.movement.device.deviceType}</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h4><label>Comment:</label> #{elements.comment}</h4>
-                                                    </div>
-                                                </div>
-                                            </div>  
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h4><label>Report Date:</label> #{elements.reportingPeriod}</h4>
-                                                    </div>
-                                                </div>
-                                            </div>  
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h4><label>Status:</label> #{elements.status}</h4>
-                                                    </div>
-                                                </div>
-                                            </div>  
-
-
-                                            <div class="text-right">
-                                                <h:form>
-                                                    <p:growl />
-                                                    <c:choose>
-                                                        <c:when test="#{elements.status eq 'Raised'}">
-                                                           <h:commandButton class="btn btn-block btn-primary" action="#{staffModel.resolveAccusation(elements)}" value="WithDraw Complain" />
-                                                        </c:when>
-                                                    </c:choose>
-                                                </h:form>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-
+                                            <td>
+                                                #{elements.device.rfid}
+                                            </td>
+                                            <td>
+                                                #{elements.device.dateCreated}
+                                            </td>
+                                            <td>
+                                                #{elements.device.createdBy.personType} #{elements.device.createdBy.firstName} #{elements.device.createdBy.lastName}
+                                            </td>
+                                            <td>
+                                                #{elements.device.dateUpdated}
+                                            </td>
+                                            <td>
+                                                #{elements.device.updatedBy.personType} #{elements.device.updatedBy.firstName} #{elements.device.updatedBy.lastName} 
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </h:form>
+                    </div>
+                </div>
+                <div class="block-header">
+                    <h2>
+                        MOVEMENTS AUDIT
+                    </h2>
+                </div>
+                <!-- Advanced Form Example With Validation -->
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h:form>
+                            <table class="table table-bordered table-striped table-hover dataTable">
+                                <thead class="bg-light">
+                                    <tr class="border-0">
+                                        <th class="border-0">#</th>
+                                        <th class="border-0">Serial No.</th>
+                                        <th class="border-0">Name</th>
+                                        <th class="border-0">RFID</th>
+                                        <th class="border-0">Entry Time</th>
+                                        <th class="border-0">Exit Time</th>
+                                        <th class="border-0">Status</th>
+                                        <th class="border-0">Date Created</th>
+                                        <th class="border-0">Created By</th>
+                                        <th class="border-0">Date Last Updated</th>
+                                        <th class="border-0">Updated By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="#{staffModel.movements}" var="elements" varStatus="status">
+                                        <tr>
+                                            <td>${status.index+1}</td>
+                                            <td>
+                                                #{elements.device.serialNumber}
+                                            </td>
+                                            <td>
+                                                #{elements.device.deviceName}
+                                            </td>
+                                            <td>
+                                                #{elements.device.rfid}
+                                            </td>
+                                            <td>
+                                                #{elements.entranceTime}
+                                            </td>
+                                            <td>
+                                                #{elements.exitTime}
+                                            </td>
+                                            <td>
+                                                #{elements.movementStatus}
+                                            </td>
+                                            <td>
+                                                #{elements.dateCreated}
+                                            </td>
+                                            <td>
+                                                #{elements.createdBy.personType} #{elements.createdBy.firstName} #{elements.createdBy.lastName}
+                                            </td>
+                                            <td>
+                                                #{elements.dateUpdated}
+                                            </td>
+                                            <td>
+                                                #{elements.updatedBy.personType} #{elements.updatedBy.firstName} #{elements.updatedBy.lastName} 
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </h:form>
                     </div>
                 </div>
                 <!-- #END# Advanced Form Example With Validation -->

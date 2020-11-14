@@ -101,6 +101,12 @@
                     <ul class="list">
                         <li class="header">MENU</li>
                         <li>
+                            <a href="audit.xhtml">
+                                <i class="material-icons">home</i>
+                                <span>Audits</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="adddevice.xhtml">
                                 <i class="material-icons">important_devices</i>
                                 <span>Add Device</span>
@@ -183,7 +189,7 @@
 
                                             <div class="text-right">
                                                 <h:form>
-                                                    <h:commandButton class="btn btn-primary" value="Update" />
+                                                    <h:commandButton action="#{staffModel.navigateEdit(elements)}" class="btn btn-primary" value="Update" />
                                                 </h:form>
                                             </div>
                                         </fieldset>

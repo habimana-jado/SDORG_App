@@ -17,4 +17,14 @@ public class StudentDao extends GenericDao<Student>{
         s.close();
         return u;
     }
+    public List<Student> findByUniversityAndNames(University university, String n){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Student a WHERE a.department.faculty.university = :x AND a.firstName = :y OR a.lastName = :z");
+        q.setParameter("x", university);
+        q.setParameter("y", n);
+        q.setParameter("z", n);
+        List<Student> u = q.list();
+        s.close();
+        return u;
+    }
 }

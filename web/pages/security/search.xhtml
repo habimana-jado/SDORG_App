@@ -336,6 +336,24 @@
                     </div>
                 </div>
                 <div class="row clearfix">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                Device Image
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div id="aniimated-thumbnials" class="list-unstyled row clearfix">
+                                <c:forEach items="#{securityModel.chosenDeviceImages}" var="dev">
+                                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                        <img class="img-responsive thumbnail" src="../../uploads/device/#{dev.path}" />
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <h:form class="form-horizontal" rendered="#{securityModel.alerted}">
                             <div class="card">

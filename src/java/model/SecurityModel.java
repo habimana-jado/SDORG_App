@@ -73,6 +73,7 @@ public class SecurityModel {
     private boolean alerted = Boolean.FALSE;
     private String rfid = new String();
     private Device chosenDevice = new Device();
+    private List<DeviceImage> chosenDeviceImages = new ArrayList<>();
 
     @PostConstruct
     public void init() {
@@ -151,11 +152,12 @@ public class SecurityModel {
             if (chosenAccusation == null) {
                 alertMessage = "This device is free to enter";
                 alerted = Boolean.FALSE;
+                chosenDeviceImages = new DeviceImageDao().findByDevice(chosenDevice);
             } else {
                 alertMessage = "This device is alerted in Complaints";
                 alerted = Boolean.TRUE;
+                chosenDeviceImages = new DeviceImageDao().findByDevice(chosenDevice);
             }
-            System.out.println(alertMessage + " = Alerted Message");
         }
     }
 
@@ -195,6 +197,10 @@ public class SecurityModel {
             } else {
                 device.setMovementStatus(EMovementStatus.CHECKED_OUT);
                 device.setPerson(chosenPerson);
+                device.setCreatedBy(loggedInUser.getStaff());
+                device.setDateCreated(new Date());
+                device.setUpdatedBy(loggedInUser.getStaff());
+                device.setDateUpdated(new Date());
                 new DeviceDao().register(device);
 
                 DeviceImage deviceImage = new DeviceImage();
@@ -221,6 +227,10 @@ public class SecurityModel {
         movement.setEntranceTime(new Date());
         movement.setMovementStatus(EMovementStatus.CHECKED_IN);
         movement.setUniversity(loggedInUser.getStaff().getUniversity());
+        movement.setCreatedBy(loggedInUser.getStaff());
+        movement.setDateCreated(new Date());
+        movement.setDateUpdated(new Date());
+        movement.setUpdatedBy(loggedInUser.getStaff());
         new MovementDao().register(movement);
 
         Device device = chosenDeviceImage.getDevice();
@@ -240,6 +250,10 @@ public class SecurityModel {
         movement.setEntranceTime(new Date());
         movement.setMovementStatus(EMovementStatus.CHECKED_IN);
         movement.setUniversity(loggedInUser.getStaff().getUniversity());
+        movement.setCreatedBy(loggedInUser.getStaff());
+        movement.setDateCreated(new Date());
+        movement.setDateUpdated(new Date());
+        movement.setUpdatedBy(loggedInUser.getStaff());
         new MovementDao().register(movement);
 
         chosenDevice.setMovementStatus(EMovementStatus.CHECKED_IN);
@@ -255,6 +269,8 @@ public class SecurityModel {
     public void checkOutDevice(Movement movement) {
         movement.setExitTime(new Date());
         movement.setMovementStatus(EMovementStatus.CHECKED_OUT);
+        movement.setDateUpdated(new Date());
+        movement.setUpdatedBy(loggedInUser.getStaff());
         new MovementDao().update(movement);
 
         Device device = movement.getDevice();
@@ -537,6 +553,14 @@ public class SecurityModel {
 
     public void setChosenDevice(Device chosenDevice) {
         this.chosenDevice = chosenDevice;
+    }
+
+    public List<DeviceImage> getChosenDeviceImages() {
+        return chosenDeviceImages;
+    }
+
+    public void setChosenDeviceImages(List<DeviceImage> chosenDeviceImages) {
+        this.chosenDeviceImages = chosenDeviceImages;
     }
 
 }
