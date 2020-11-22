@@ -207,6 +207,9 @@
                         <div class="card">
                             <div class="header">
                                 <h2>LECTURER LIST</h2>
+                                <h:form>
+                                <h:commandButton value=" Report" class="btn btn-primary" action="#{adminModel.generateLecturerReport()}" />
+                                </h:form>
                             </div>
                             <div>
                                 <div>
@@ -309,6 +312,9 @@
                         <div class="card">
                             <div class="header">
                                 <h2>STUDENT LIST</h2>
+                                <h:form>
+                                <h:commandButton value=" Report" class="btn btn-primary" action="#{adminModel.generateStudentReport()}" />
+                                </h:form>
                             </div>
                             <div>
                                 <div>
@@ -369,16 +375,17 @@
                                     </h:form>
                                 </div>
                                 <!-- Default Size -->
-
-
                             </div>
                         </div>
                     </div>
                 </div><div class="row clearfix">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card">
-                            <div class="header">
-                                <h2>STAFF LIST</h2>
+                            <div class="header">                                
+                                <h:form>
+                                <h:commandButton value=" Report" class="btn btn-primary" action="#{adminModel.generateStaffReport()}" />
+                                </h:form>
+                            <h2>STAFF LIST</h2>
                             </div>
                             <div>
                                 <div>
@@ -427,7 +434,6 @@
                                     </table>
                                 </div>
                                 <!-- Default Size -->
-
 
                             </div>
                         </div>

@@ -81,7 +81,7 @@ public class StudentModel {
     public void registerStudentDevice() {
         if (new DeviceDao().findOne(Device.class, device.getDeviceId()) != null) {
             try {
-                device.setUpdatedBy(loggedInUser.getSecurity());
+                device.setUpdatedBy(loggedInUser.getStudent());
                 device.setDateUpdated(new Date());
                 new DeviceDao().update(device);
 
@@ -101,9 +101,9 @@ public class StudentModel {
                 } else {
                     device.setMovementStatus(EMovementStatus.CHECKED_OUT);
                     device.setPerson(loggedInUser.getStudent());
-                    device.setCreatedBy(loggedInUser.getSecurity());
+                    device.setCreatedBy(loggedInUser.getStudent());
                     device.setDateCreated(new Date());
-                    device.setUpdatedBy(loggedInUser.getSecurity());
+                    device.setUpdatedBy(loggedInUser.getStudent());
                     device.setDateUpdated(new Date());
                     new DeviceDao().register(device);
 

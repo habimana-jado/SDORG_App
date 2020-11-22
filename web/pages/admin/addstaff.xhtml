@@ -269,6 +269,15 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <h:inputSecret id="passwordcheck" value="#{adminModel.checkPassword}" class="form-control" required="true" requiredMessage="Please Fill Password Again"/>
+                                                    <h:message for="passwordcheck" class="text text-danger" />
+                                                    <label>Password Again</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="text-center">                                         
                                             <h:commandButton class="btn btn-primary" value="Register Security" action="#{adminModel.registerStaff()}"/>
                                         </div>

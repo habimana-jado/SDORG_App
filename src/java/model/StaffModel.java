@@ -107,8 +107,6 @@ public class StaffModel {
                     device.setDateUpdated(new Date());
                     new DeviceDao().register(device);
 
-                    myDevices = new DeviceImageDao().findByPerson(loggedInUser.getSecurity());
-
                     DeviceImage deviceImage = new DeviceImage();
                     for (String x : chosenImage) {
                         deviceImage.setPath(x);
@@ -116,6 +114,7 @@ public class StaffModel {
                         new DeviceImageDao().register(deviceImage);
                     }
                     chosenImage.clear();
+                    myDevices = new DeviceImageDao().findByPerson(loggedInUser.getSecurity());
 
                     FacesContext fc = FacesContext.getCurrentInstance();
                     fc.addMessage(null, new FacesMessage("Device Registered"));

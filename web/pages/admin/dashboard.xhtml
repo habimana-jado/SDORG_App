@@ -73,7 +73,7 @@
         <section>
             <!-- Left Sidebar -->
             <aside id="leftsidebar" class="sidebar">
-                
+
                 <!-- User Info -->
                 <div class="user-info" >
                     <div class="image">
@@ -172,6 +172,50 @@
                         <div class="col-lg-6">
                             <h:commandButton value="Complaints Report" class="btn btn-primary" action="#{adminModel.generateaccusationreport()}" />
                             <p:chart type="pie" model="#{adminModel.pieModel2}" style="width:400px;height:300px" />                        
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-lg-8">
+                            <h:commandButton value="Monthly Entry Report" class="btn btn-primary" action="#{adminModel.generateMonthlyMovementReport()}" />
+                            <p:chart id="barChart" type="bar" model="#{adminModel.barChartModel1}" style="width:800px;height:300px" />                       
+
+                        </div>
+                        <div class="col-lg-2">
+                            <h:selectOneMenu class="form-control" value="#{adminModel.year}" >
+                                <f:selectItem itemLabel="2010" itemValue="2010" />
+                                <f:selectItem itemLabel="2011" itemValue="2011" />
+                                <f:selectItem itemLabel="2012" itemValue="2012" />
+                                <f:selectItem itemLabel="2013" itemValue="2013" />
+                                <f:selectItem itemLabel="2014" itemValue="2014" />
+                                <f:selectItem itemLabel="2015" itemValue="2015" />
+                                <f:selectItem itemLabel="2016" itemValue="2016" />
+                                <f:selectItem itemLabel="2017" itemValue="2017" />
+                                <f:selectItem itemLabel="2018" itemValue="2018" />
+                                <f:selectItem itemLabel="2019" itemValue="2019" />
+                                <f:selectItem itemLabel="2020" itemValue="2020" />
+                                <f:selectItem itemLabel="2021" itemValue="2021" />
+                                <f:selectItem itemLabel="2021" itemValue="2022" />
+                                <f:selectItem itemLabel="2022" itemValue="2013" />
+                                <f:ajax listener="#{adminModel.setYear()}" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div class="col-lg-2">
+                            <h:selectOneMenu class="form-control" value="#{adminModel.month}" >
+                                <f:selectItem itemLabel="January" itemValue="01" />
+                                <f:selectItem itemLabel="February" itemValue="02" />
+                                <f:selectItem itemLabel="March" itemValue="03" />
+                                <f:selectItem itemLabel="April" itemValue="04" />
+                                <f:selectItem itemLabel="May" itemValue="05" />
+                                <f:selectItem itemLabel="June" itemValue="06" />
+                                <f:selectItem itemLabel="July" itemValue="07" />
+                                <f:selectItem itemLabel="August" itemValue="08" />
+                                <f:selectItem itemLabel="September" itemValue="09" />
+                                <f:selectItem itemLabel="October" itemValue="10" />
+                                <f:selectItem itemLabel="November" itemValue="11" />
+                                <f:selectItem itemLabel="December" itemValue="12" />
+                                <f:ajax listener="#{adminModel.createBarModel31()}" render="barChart" />
+                            </h:selectOneMenu>
                         </div>
                     </div>
                 </h:form>
@@ -337,6 +381,76 @@
 
         <!-- Demo Js -->
         <script src="./../js/demo.js"></script>
+
+        <script type="text/javascript">
+            PrimeFaces.locales['es'] = {
+                closeText: 'Cerrar',
+                prevText: 'Anterior',
+                nextText: 'Siguiente',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Sólo hora',
+                timeText: 'Tiempo',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                currentText: 'Fecha actual',
+                ampm: false,
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                allDayText: 'Todo el día'
+            };
+            PrimeFaces.locales ['de'] = {
+                closeText: 'Schließen',
+                prevText: 'Zurück',
+                nextText: 'Weiter',
+                monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+                monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+                dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+                dayNamesShort: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'],
+                dayNamesMin: ['S', 'M', 'D', 'M ', 'D', 'F ', 'S'],
+                weekHeader: 'Woche',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Nur Zeit',
+                timeText: 'Zeit',
+                hourText: 'Stunde',
+                minuteText: 'Minute',
+                secondText: 'Sekunde',
+                currentText: 'Aktuelles Datum',
+                ampm: false,
+                month: 'Monat',
+                week: 'Woche',
+                day: 'Tag',
+                allDayText: 'Ganzer Tag'
+            };
+        </script>
+
+        <script type="text/javascript">
+            //<![CDATA[
+            function dateTemplateFunc(date) {
+                return '<span style="background-color:' + ((date.day < 21 && date.day > 10) ? '#81C784' : 'inherit') + ';border-radius:50%;padding: .25em;width: 1.75em; height:1.75em; display:block;">' + date.day + '</span>';
+            }
+            //]]>
+        </script>
+
+        <style type="text/css">
+            .value {
+                font-weight: bold;
+            }
+        </style>
+
     </h:body>
 </html>
 
