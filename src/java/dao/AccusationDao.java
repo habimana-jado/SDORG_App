@@ -3,6 +3,7 @@ package dao;
 
 import domain.Accusation;
 import domain.Device;
+import domain.EMovementStatus;
 import domain.Lecturer;
 import domain.Security;
 import domain.Staff;
@@ -76,6 +77,16 @@ public class AccusationDao extends GenericDao<Accusation>{
         List<Accusation> u = q.list();
         s.close();
         return u;
+    }
+    
+    public Accusation findByDeviceAndStatus(Device d, String status){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Accusation a WHERE a.movement.device = :d AND a.status = :s");
+        q.setParameter("d", d);
+        q.setParameter("s", status);
+        Accusation a = (Accusation) q.uniqueResult();
+        s.close();
+        return a;
     }
     
 }

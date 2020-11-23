@@ -158,6 +158,7 @@
                     </h2>
                 </div>
                 <p:dialog header="Complain" id="dialog" widgetVar="dlg2" modal="true">
+                    <p:growl />
                     <h:form>
                         <div class="row">
                             <div class="col-lg-12">
@@ -188,7 +189,7 @@
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                            <p:commandButton class="btn btn-primary btn-sm" action="#{studentModel.registerAccusation()}" value="Register"></p:commandButton>
+                                            <p:commandButton class="btn btn-primary btn-sm" oncomplete="PF('dlg2').hide();" action="#{studentModel.registerAccusation()}" value="Register"></p:commandButton>
                                         </div>
                                     </div>
                                 </div>

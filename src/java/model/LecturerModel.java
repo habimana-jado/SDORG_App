@@ -81,12 +81,12 @@ public class LecturerModel {
     public void registerLecturerDevice() {
         if (new DeviceDao().findOne(Device.class, device.getDeviceId()) != null) {
             try {
-                    device.setUpdatedBy(loggedInUser.getLecturer());
-                    device.setDateUpdated(new Date());
+                device.setUpdatedBy(loggedInUser.getLecturer());
+                device.setDateUpdated(new Date());
                 new DeviceDao().update(device);
 
                 myDevices = new DeviceImageDao().findByPerson(loggedInUser.getLecturer());
-                
+
                 FacesContext fc = FacesContext.getCurrentInstance();
                 fc.addMessage(null, new FacesMessage("Device Updated"));
 
@@ -107,8 +107,6 @@ public class LecturerModel {
                     device.setDateUpdated(new Date());
                     new DeviceDao().register(device);
 
-                    myDevices = new DeviceImageDao().findByPerson(loggedInUser.getLecturer());
-                    
                     DeviceImage deviceImage = new DeviceImage();
                     for (String x : chosenImage) {
                         deviceImage.setPath(x);
@@ -116,6 +114,7 @@ public class LecturerModel {
                         new DeviceImageDao().register(deviceImage);
                     }
                     chosenImage.clear();
+                    myDevices = new DeviceImageDao().findByPerson(loggedInUser.getLecturer());
 
                     FacesContext fc = FacesContext.getCurrentInstance();
                     fc.addMessage(null, new FacesMessage("Device Registered"));

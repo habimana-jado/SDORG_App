@@ -39,18 +39,22 @@ public class StudentModel {
 
     public void registerAccusation() {
         try {
-            accusation.setStatus("Raised");
-            accusation.setMovement(chosenMovement);
-            accusation.setReportingPeriod(new Date());
-            new AccusationDao().register(accusation);
-            accusations = new AccusationDao().findByStudent(loggedInUser.getStudent());
-            accusation = new Accusation();
+            if (new AccusationDao().findByDeviceAndStatus(chosenMovement.getDevice(), "Raised") != null) {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Device Already Reported"));
+            } else {
+                accusation.setStatus("Raised");
+                accusation.setMovement(chosenMovement);
+                accusation.setReportingPeriod(new Date());
+                new AccusationDao().register(accusation);
+                accusations = new AccusationDao().findByStudent(loggedInUser.getStudent());
+                accusation = new Accusation();
 
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage(null, new FacesMessage("Complaint Raised"));
-
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("Complaint Raised"));
+            }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -85,7 +89,7 @@ public class StudentModel {
                 device.setDateUpdated(new Date());
                 new DeviceDao().update(device);
 
-                myDevices = new DeviceImageDao().findByStudent(loggedInUser.getStudent());
+                myDevices = new DeviceImageDao().findByPerson(loggedInUser.getStudent());
 
                 FacesContext fc = FacesContext.getCurrentInstance();
                 fc.addMessage(null, new FacesMessage("Device Updated"));
@@ -107,8 +111,6 @@ public class StudentModel {
                     device.setDateUpdated(new Date());
                     new DeviceDao().register(device);
 
-                    myDevices = new DeviceImageDao().findByStudent(loggedInUser.getStudent());
-
                     DeviceImage deviceImage = new DeviceImage();
                     for (String x : chosenImage) {
                         deviceImage.setPath(x);
@@ -116,6 +118,7 @@ public class StudentModel {
                         new DeviceImageDao().register(deviceImage);
                     }
                     chosenImage.clear();
+                    myDevices = new DeviceImageDao().findByPerson(loggedInUser.getStudent());
 
                     FacesContext fc = FacesContext.getCurrentInstance();
                     fc.addMessage(null, new FacesMessage("Device Registered"));
