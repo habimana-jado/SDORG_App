@@ -943,9 +943,9 @@ public class AdminModel {
             Sheet sheet = work.getSheetAt(0);
             DataFormatter dataFormatter = new DataFormatter();
             int rowNum = 0;
+            Student emp = new Student();
             for (Row row : sheet) {
-
-                Student emp = new Student();
+                emp = new Student();
                 if (row.getRowNum() > 0) {
                     int counter = 0;
                     for (Cell cell : row) {
@@ -1010,9 +1010,12 @@ public class AdminModel {
             Sheet sheet = work.getSheetAt(0);
             DataFormatter dataFormatter = new DataFormatter();
             int rowNum = 0;
+            Lecturer emp = new Lecturer();
+
             for (Row row : sheet) {
 
-                Lecturer emp = new Lecturer();
+                emp = new Lecturer();
+
                 if (row.getRowNum() > 0) {
                     int counter = 0;
                     for (Cell cell : row) {
@@ -1050,12 +1053,12 @@ public class AdminModel {
                         }
                         Faculty fac = new FacultyDao().findOne(Faculty.class, facultyId);
                         emp.setFaculty(fac);
-                        new LecturerDao().register(lecturer);
-                        lecturers = new LecturerDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
+                        emp.setPersonType("Lecturer");
+                        new LecturerDao().register(emp);
                     }
                 }
-                students = new StudentDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
             }
+            lecturers = new LecturerDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
         } catch (IOException ex) {
             Logger.getLogger(AdminModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1189,38 +1192,38 @@ public class AdminModel {
 //                tables.addCell(pdfc6);
                 i++;
             }
-        document.add(tables);
-        path = new String();
-        path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("\\reportDesign");
-        path = path.substring(0, path.indexOf("\\build"));
-        path = path + "\\web\\reportDesign\\sign.jpeg";
-        Image image2 = Image.getInstance(path);
-        image2.scaleAbsolute(120, 120);
-        image2.setAlignment(Element.ALIGN_RIGHT);
-        Paragraph title2 = new Paragraph();
-        //BEGIN page
-        title2.add(image2);
-        document.add(title2);
-        document.add(new Paragraph("\n"));
-        path = new String();
-        path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("\\reportDesign");
-        path = path.substring(0, path.indexOf("\\build"));
-        path = path + "\\web\\reportDesign\\footer.jpeg";
-        Image image3 = Image.getInstance(path);
-        image3.scaleAbsolute(600, 40);
-        image3.setAlignment(Element.ALIGN_BASELINE);
-        Paragraph title3 = new Paragraph();
-        //BEGIN page
-        title3.add(image3);
-        document.add(title3);
-        document.add(new Paragraph("\n"));
+            document.add(tables);
+            path = new String();
+            path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("\\reportDesign");
+            path = path.substring(0, path.indexOf("\\build"));
+            path = path + "\\web\\reportDesign\\sign.jpeg";
+            Image image2 = Image.getInstance(path);
+            image2.scaleAbsolute(120, 120);
+            image2.setAlignment(Element.ALIGN_RIGHT);
+            Paragraph title2 = new Paragraph();
+            //BEGIN page
+            title2.add(image2);
+            document.add(title2);
+            document.add(new Paragraph("\n"));
+            path = new String();
+            path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("\\reportDesign");
+            path = path.substring(0, path.indexOf("\\build"));
+            path = path + "\\web\\reportDesign\\footer.jpeg";
+            Image image3 = Image.getInstance(path);
+            image3.scaleAbsolute(600, 40);
+            image3.setAlignment(Element.ALIGN_BASELINE);
+            Paragraph title3 = new Paragraph();
+            //BEGIN page
+            title3.add(image3);
+            document.add(title3);
+            document.add(new Paragraph("\n"));
 //        Paragraph par = new Paragraph("\n\nPrinted On: " + sdf.format(new Date()) + ". By: " + loggedInUser.getAdmin().getFirstName() + " ", font1);
 //        par.setAlignment(Element.ALIGN_RIGHT);
 //        document.add(par);
-        document.close();
-        String fileName = "Report_" + new Date().getTime() / (1000 * 3600 * 24);
-        writePDFToResponse(context.getExternalContext(), baos, fileName);
-        context.responseComplete();
+            document.close();
+            String fileName = "Report_" + new Date().getTime() / (1000 * 3600 * 24);
+            writePDFToResponse(context.getExternalContext(), baos, fileName);
+            context.responseComplete();
         }
 
     }
