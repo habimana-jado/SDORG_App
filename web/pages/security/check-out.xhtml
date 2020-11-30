@@ -152,68 +152,139 @@
             <div class="container-fluid">
                 <div class="block-header">
                     <h2>
-                        UNIVERSITY DEVICES
+                        DEVICE CHECK-OUT FORM
                     </h2>
                 </div>
+                <!-- Horizontal Layout -->
+                <div class="row clearfix">
+                    <h:form class="form-horizontal">
 
-                <!-- Advanced Form Example With Validation -->
-                <c:forEach items="#{securityModel.universityDevices}" var="elements">
-                    <div class="row clearfix">
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div class="card">
-                                <div class="header">
-                                    <h2>
-                                        Device Info
-                                    </h2>
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                <div class="card">
+                                    <div class="body">
+                                        <div class="row clearfix">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5 form-control-label">
+                                                <label>RFID</label>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-7">
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <h:inputText class="form-control" value="#{securityModel.rfid}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5 form-control-label">
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
+                                                        <h:commandButton value="Search" action="#{securityModel.searchByRfidCheckout()}" class="btn btn-primary m-t-15 waves-effect">
+                                                        </h:commandButton>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="body">
-                                    <h:form class="form-horizontal">
-                                        <div class="row clearfix">
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
-                                                <label for="email_address_2">Serial No.</label>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h:inputText disabled="true" class="form-control" value="#{elements.device.serialNumber}"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row clearfix">
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
-                                                <label for="password_2">Device Name</label>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h:inputText disabled="true" class="form-control" value="#{elements.device.deviceName}"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row clearfix">
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
-                                                <label for="password_2">Device Type</label>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h:inputText disabled="true" class="form-control" value="#{elements.device.deviceType}"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row clearfix">
-                                            <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                                                <h:commandButton value="Submit" action="#{securityModel.checkOutDevice(elements)}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
-                                            </div>
-                                        </div>
-                                    </h:form>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="image">
+                                    <img src="../../uploads/profile/#{securityModel.chosenDevice.person.profilePicture}" width="90" height="90" alt="User" />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    </h:form>
+
+                    <div class="row">
+                        <h:form id="alertComponent">
+                            <c:choose>
+                                <c:when test="#{securityModel.alertMessageCheckout eq 'This device is free to exit'}">
+                                    <div class="alert alert-success alert-dismissible fadeIn" role="alert">
+                                        #{securityModel.alertMessageCheckout}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="alert alert-danger alert-dismissible " role="alert">
+                                        #{securityModel.alertMessageCheckout}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </h:form>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                        <div class="card">
+                            <div class="header">
+                                <h2>
+                                    Device Info
+                                </h2>
+                            </div>
+                            <div class="body">
+                                <h:form class="form-horizontal">
+                                    <p:growl />
+                                    <div class="text-right">
+                                        <label class="btn btn-warning">#{securityModel.chosenDevice.movementStatus}</label>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="email_address_2">Serial No.</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDevice.serialNumber}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="password_2">Device Name</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDevice.deviceName}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="password_2">Device Type</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenDevice.deviceType}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row clearfix">
+                                        <c:choose>
+                                            <c:when test="#{securityModel.alertMessageCheckout eq 'This device is free to exit'}">
+                                                <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
+                                                    <h:commandButton value="Check-Out" action="#{securityModel.checkInDeviceByRFID()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
+                                                </div>
+                                            </c:when>
+                                        </c:choose>
+                                    </div>
+
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <h:form class="form-horizontal">
                             <div class="card">
                                 <div class="header">
                                     <h2>
@@ -221,62 +292,177 @@
                                     </h2>
                                 </div>
                                 <div class="body">
-                                    <h:form class="form-horizontal">
-                                        <div class="row clearfix">
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
-                                                <label>National ID</label>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h:inputText disabled="True" class="form-control" value="#{elements.device.person.nationalId}"/>
-                                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>National ID</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="True" class="form-control" value="#{securityModel.chosenDevice.person.nationalId}"/>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row clearfix">
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
-                                                <label for="email_address_2">First Name</label>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h:inputText disabled="True" class="form-control" value="#{elements.device.person.firstName}"/>
-                                                    </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="email_address_2">First Name</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="True" class="form-control" value="#{securityModel.chosenDevice.person.firstName}"/>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row clearfix">
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
-                                                <label for="password_2">Last Name</label>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h:inputText disabled="True" class="form-control"  value="#{elements.device.person.lastName}"/>
-                                                    </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="password_2">Last Name</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="True" class="form-control"  value="#{securityModel.chosenDevice.person.lastName}"/>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row clearfix">
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
-                                                <label for="password_2">Gender</label>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <h:inputText disabled="True" class="form-control"  value="#{elements.device.person.gender}"/>
-                                                    </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="password_2">Gender</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="True" class="form-control"  value="#{securityModel.chosenDevice.person.gender}"/>
                                                 </div>
                                             </div>
                                         </div>
-                                    </h:form>
+                                    </div>
                                 </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                Device Image
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div id="aniimated-thumbnials" class="list-unstyled row clearfix">
+                                <c:forEach items="#{securityModel.chosenDeviceImages}" var="dev">
+                                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                        <img class="img-responsive thumbnail" src="../../uploads/device/#{dev.path}" />
+                                    </div>
+                                </c:forEach>
                             </div>
                         </div>
                     </div>
-                </c:forEach>
-                <!-- #END# Advanced Form Example With Validation -->
+                </div>
+                <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h:form class="form-horizontal" rendered="#{securityModel.alerted}">
+                            <div class="card">
+                                <div class="header">
+                                    <h2>
+                                        Complaint Info
+                                    </h2>
+                                </div>
+                                <div class="body">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Period Reported</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.reportingPeriod}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Comment</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.comment}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Device Registration Date</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.movement.device.registrationDate}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h:form class="form-horizontal" rendered="#{securityModel.alerted}">
+                            <div class="card">
+                                <div class="header">
+                                    <h2>
+                                        Device-Owner Info
+                                    </h2>
+                                </div>
+                                <div class="body">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Names</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.movement.device.person.firstName} #{securityModel.chosenAccusation.movement.device.person.lastName}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Phone</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.movement.device.person.phone}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-5 form-control-label">
+                                            <label>Email</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <h:inputText disabled="true" class="form-control" value="#{securityModel.chosenAccusation.movement.device.person.email}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
             </div>
         </section>
 

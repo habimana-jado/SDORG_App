@@ -68,7 +68,8 @@ public class SecurityModel {
     private DeviceImage chosenDeviceImage = new DeviceImage();
     private List<Movement> universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
     private List<Movement> alertedDevices = new ArrayList<>();
-    private String alertMessage = "This device is free to enter";
+    private String alertMessage = new String();
+    private String alertMessageCheckout = new String();
     private Accusation chosenAccusation = new Accusation();
     private boolean alerted = Boolean.FALSE;
     private String rfid = new String();
@@ -142,13 +143,15 @@ public class SecurityModel {
         if (chosenDevice == null || chosenDevice.equals(null) || chosenDevice.equals("")) {
             alertMessage = "No device with such RFID Found";
             alerted = Boolean.FALSE;
-        } else if (chosenAccusation == null || chosenAccusation.equals(null) || chosenAccusation.equals("")) {
+        } else if (chosenDevice.getMovementStatus().equals(EMovementStatus.CHECKED_IN)) {
+            chosenDeviceImages = new DeviceImageDao().findByDevice(chosenDevice);
+            alertMessageCheckout = "This device is checked-in";
+        }  else if (chosenAccusation == null || chosenAccusation.equals(null) || chosenAccusation.equals("")) {
+            chosenDeviceImages = new DeviceImageDao().findByDevice(chosenDevice);
             alertMessage = "This device is free to enter";
             alerted = Boolean.FALSE;
         } else {
-            System.out.println(chosenDevice.getDeviceName() + " = chosen Device");
             chosenAccusation = new AccusationDao().findByDeviceAndStatus(chosenDevice);
-            System.out.println(chosenAccusation.getReportingPeriod() + " = Chosen Accusation");
             if (chosenAccusation == null) {
                 alertMessage = "This device is free to enter";
                 alerted = Boolean.FALSE;
@@ -156,6 +159,27 @@ public class SecurityModel {
             } else {
                 alertMessage = "This device is alerted in Complaints";
                 alerted = Boolean.TRUE;
+                chosenDeviceImages = new DeviceImageDao().findByDevice(chosenDevice);
+            }
+        }
+    }
+
+    public void searchByRfidCheckout() {
+        chosenDevice = new DeviceDao().findByRfid(rfid);
+        if (chosenDevice == null || chosenDevice.equals(null) || chosenDevice.equals("")) {
+            alertMessageCheckout = "No device with such RFID Found";
+            chosenDevice = new Device();
+            chosenAccusation = new Accusation();
+        } else if (chosenDevice.getMovementStatus().equals(EMovementStatus.CHECKED_OUT)) {
+            chosenDeviceImages = new DeviceImageDao().findByDevice(chosenDevice);
+            alertMessageCheckout = "This device is checked-out";
+        } else {
+            chosenAccusation = new AccusationDao().findByDeviceAndStatus(chosenDevice);
+            if (chosenAccusation == null) {
+                alertMessageCheckout = "This device is free to exit";
+                chosenDeviceImages = new DeviceImageDao().findByDevice(chosenDevice);
+            } else {
+                alertMessage = "This device is alerted in Complaints";
                 chosenDeviceImages = new DeviceImageDao().findByDevice(chosenDevice);
             }
         }
@@ -561,6 +585,14 @@ public class SecurityModel {
 
     public void setChosenDeviceImages(List<DeviceImage> chosenDeviceImages) {
         this.chosenDeviceImages = chosenDeviceImages;
+    }
+
+    public String getAlertMessageCheckout() {
+        return alertMessageCheckout;
+    }
+
+    public void setAlertMessageCheckout(String alertMessageCheckout) {
+        this.alertMessageCheckout = alertMessageCheckout;
     }
 
 }
