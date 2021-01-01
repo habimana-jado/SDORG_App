@@ -29,7 +29,7 @@ public class Admin implements Serializable{
     @ManyToOne
     private University university;
     
-    @OneToOne(mappedBy = "admin", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "admin")
     private User user;
 
     public University getUniversity() {

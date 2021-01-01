@@ -165,13 +165,42 @@
             <div class="container-fluid">
                 <h:form>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div>
                             <h:commandButton value="Movement Report" class="btn btn-primary" action="#{adminModel.generatemovementreport()}" />
-                            <p:chart type="pie" model="#{adminModel.pieModel1}" style="width:400px;height:300px" />                        
+                            <p:chart id="movementPie" type="pie" model="#{adminModel.pieModel1}" style="width:400px;height:300px" />                        
+                        </div>
+                        <div>
+                            <h:inputText class="form-control" value="#{adminModel.from}" >
+                                <f:ajax listener="#{adminModel.filterPieModel1()}" render="movementPie, complaintPie" />
+                            </h:inputText>
+                        </div>
+                        <div>
+                            <h:inputText class="form-control" value="#{adminModel.to}" >
+                                <f:ajax listener="#{adminModel.filterPieModel1()}" render="movementPie, complaintPie" />
+                            </h:inputText>
+                        </div>
+                        <div>
+                            <h:selectOneMenu class="form-control" value="#{adminModel.deviceType}" >
+                                <f:selectItem itemValue="All" itemLabel="All" />
+                                <f:selectItem itemValue="Laptop" itemLabel="Laptop" />
+                                <f:selectItem itemValue="Phone" itemLabel="Phone" />
+                                <f:selectItem itemValue="Projector" itemLabel="Projector" />
+                                <f:ajax listener="#{adminModel.filterPieModel1()}" render="movementPie, complaintPie" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div>
+                            <h:selectOneMenu class="form-control" value="#{adminModel.status}" >
+                                <f:selectItem itemValue="All" itemLabel="All" />
+                                <f:selectItem itemValue="In" itemLabel="Checked-In" />
+                                <f:selectItem itemValue="Out" itemLabel="Checked-Out" />
+                                <f:selectItem itemValue="Resolved" itemLabel="Resolved" />
+                                <f:selectItem itemValue="Raised" itemLabel="Raised" />
+                                <f:ajax listener="#{adminModel.filterPieModel1()}" render="movementPie, complaintPie" />
+                            </h:selectOneMenu>
                         </div>
                         <div class="col-lg-6">
                             <h:commandButton value="Complaints Report" class="btn btn-primary" action="#{adminModel.generateaccusationreport()}" />
-                            <p:chart type="pie" model="#{adminModel.pieModel2}" style="width:400px;height:300px" />                        
+                            <p:chart id="complaintPie" type="pie" model="#{adminModel.pieModel2}" style="width:400px;height:300px" />                        
                         </div>
                     </div>
                     <div class="row">

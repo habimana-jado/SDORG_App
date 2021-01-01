@@ -19,11 +19,11 @@ public class Faculty implements Serializable {
     private String facultyId = UUID.randomUUID().toString();
     private String name;
 
-    @OneToMany(mappedBy = "faculty", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "faculty")
     @Fetch(FetchMode.SUBSELECT)
     private List<Department> department;
 
-    @OneToMany(mappedBy = "faculty", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "faculty")
     @Fetch(FetchMode.SUBSELECT)
     private List<Lecturer> lecturer;
 

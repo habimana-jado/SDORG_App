@@ -125,8 +125,10 @@ public class AdminModel {
     private PieChartModel pieModel1;
     private PieChartModel pieModel2;
     private BarChartModel barChartModel1;
-    private String from;
-    private String to;
+    private String from = "";
+    private String to = "";
+    private String deviceType = "All";
+    private String status = "All";
     private String searchKey = new String();
     private final List<Movement> movements = new MovementDao().findByUniversityLogged(loggedInUser.getAdmin().getUniversity());
     private final List<Accusation> accusations = new AccusationDao().findByUniversity(loggedInUser.getAdmin().getUniversity());
@@ -182,6 +184,125 @@ public class AdminModel {
 
         pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatus(loggedInUser.getAdmin().getUniversity(), "Raised"));
         pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatus(loggedInUser.getAdmin().getUniversity(), "Resolved"));
+
+        pieModel1.setTitle("Movements");
+        pieModel1.setLegendPosition("w");
+        pieModel1.setShadow(false);
+
+        pieModel2.setTitle("Complaints");
+        pieModel2.setLegendPosition("e");
+        pieModel2.setShadow(false);
+    }
+
+    public void filterPieModel1() {
+        pieModel1 = new PieChartModel();
+
+        pieModel2 = new PieChartModel();
+        Date fromDate = null;
+        Date toDate = null;
+
+        if (from.isEmpty() || from.equalsIgnoreCase("")) {
+            try {
+                fromDate = new SimpleDateFormat("yyyy-MM-dd").parse("1970-01-01");
+            } catch (ParseException ex) {
+                Logger.getLogger(AdminModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            try {
+                fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(from);
+            } catch (ParseException ex) {
+                Logger.getLogger(AdminModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if (to.isEmpty() || to.equalsIgnoreCase("")) {
+            toDate = new Date();
+        } else {
+            try {
+                toDate = new SimpleDateFormat("yyyy-MM-dd").parse(to);
+            } catch (ParseException ex) {
+                Logger.getLogger(AdminModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (deviceType.equalsIgnoreCase("All")) {
+            if (status.equalsIgnoreCase("All")) {
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate));
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate));
+                System.out.println("Total = "+new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate));
+                System.out.println("Total = "+new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate));
+                
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate));
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate));
+
+            } else if (status.equalsIgnoreCase("In")) {
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate));
+
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate));
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate));
+
+            } else if (status.equalsIgnoreCase("Out")) {
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate));
+
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate));
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate));
+
+            } else if (status.equalsIgnoreCase("Raised")) {
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate));
+
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate));
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate));
+
+            } else if (status.equalsIgnoreCase("Resolved")) {
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate));
+
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate));
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate));
+
+            } else {
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate));
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate));
+
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate));
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDate(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate));
+
+            }
+        } else {
+            if (status.equalsIgnoreCase("All")) {
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate, deviceType));
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate, deviceType));
+
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate, deviceType));
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate, deviceType));
+            } else if (status.equalsIgnoreCase("In")) {
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate, deviceType));
+            
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate, deviceType));
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate, deviceType));
+            } else if (status.equalsIgnoreCase("Out")) {
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate, deviceType));
+            
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate, deviceType));
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate, deviceType));
+            } else if (status.equalsIgnoreCase("Raised")) {
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate, deviceType));
+
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate, deviceType));
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate, deviceType));
+                
+            } else if (status.equalsIgnoreCase("Resolved")) {
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate, deviceType));
+
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate, deviceType));
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate, deviceType));
+                
+            } else {
+                pieModel1.set("Checked-In", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_IN, fromDate, toDate, deviceType));
+                pieModel1.set("Checked-Out", new MovementDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), EMovementStatus.CHECKED_OUT, fromDate, toDate, deviceType));
+                
+                pieModel2.set("Raised", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Raised", fromDate, toDate, deviceType));
+                pieModel2.set("Resolved", new AccusationDao().findTotalByUniversityAndMovementStatusAndDateAndDeviceType(loggedInUser.getAdmin().getUniversity(), "Resolved", fromDate, toDate, deviceType));
+            }
+        }
 
         pieModel1.setTitle("Movements");
         pieModel1.setLegendPosition("w");
@@ -2371,6 +2492,22 @@ public class AdminModel {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

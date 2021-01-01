@@ -2,13 +2,17 @@
 package common;
 
 import dao.MovementDao;
+import dao.UniversityDao;
 import dao.UserDao;
 import domain.EMovementStatus;
 import domain.EStatus;
 import domain.EUserType;
 import domain.Movement;
+import domain.University;
 import domain.User;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.faces.context.FacesContext;
 import model.AdminModel;
 
 public class Test {
@@ -53,111 +57,120 @@ public class Test {
 //        u.setUsername("hec");
 //        new UserDao().register(u);
 
-        new Test().setCounterValues("2020", "11");
-    }
-    public void setCounterValues(String year, String month) {
-        SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
-        SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
-        SimpleDateFormat sdfDay = new SimpleDateFormat("dd");
+//        new Test().setCounterValues("2020", "11");
 
-        for (Movement m : new MovementDao().findAll(Movement.class)) {
-            if (sdfYear.format(m.getEntranceTime()).matches(year) && sdfMonth.format(m.getEntranceTime()).matches(month)) {
-                if (sdfDay.format(m.getEntranceTime()).matches("01")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter1++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("02")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter2++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("03")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter3++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("04")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter4++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("05")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter5++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("06")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter6++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("07")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter7++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("08")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter8++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("09")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter9++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("10")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter10++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("11")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter11++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("12")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter12++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("13")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter13++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("14")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter14++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("15")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter15++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("16")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter16++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("17")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter17++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("18")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter18++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("19")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter19++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("20")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter20++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("21")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter21++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("22")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter22++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("23")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter23++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("24")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter24++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("25")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter25++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("26")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter26++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("27")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter27++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("28")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter28++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("29")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter29++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("30")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter30++;
-                } else if (sdfDay.format(m.getEntranceTime()).matches("31")) {
-                    System.out.println(sdfDay.format(m.getEntranceTime()));
-                    counter31++;
-                }
-            }
-        }
+        University un = new UniversityDao().findOne(University.class, "07f28f33-393d-41ef-b452-e191b3c157cc");
+        Date from = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-14");
+        Date to = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-01");
+        System.out.println("Total = "+new MovementDao().findTotalByUniversityAndMovementStatusAndDate(un, EMovementStatus.CHECKED_OUT, from, to));
     }
+    
+   
+    
+//    public void setCounterValues(String year, String month) {
+//        SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
+//        SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
+//        SimpleDateFormat sdfDay = new SimpleDateFormat("dd");
+//
+//        for (Movement m : new MovementDao().findAll(Movement.class)) {
+//            if (sdfYear.format(m.getEntranceTime()).matches(year) && sdfMonth.format(m.getEntranceTime()).matches(month)) {
+//                if (sdfDay.format(m.getEntranceTime()).matches("01")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter1++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("02")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter2++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("03")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter3++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("04")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter4++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("05")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter5++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("06")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter6++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("07")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter7++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("08")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter8++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("09")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter9++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("10")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter10++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("11")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter11++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("12")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter12++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("13")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter13++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("14")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter14++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("15")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter15++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("16")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter16++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("17")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter17++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("18")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter18++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("19")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter19++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("20")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter20++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("21")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter21++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("22")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter22++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("23")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter23++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("24")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter24++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("25")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter25++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("26")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter26++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("27")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter27++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("28")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter28++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("29")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter29++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("30")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter30++;
+//                } else if (sdfDay.format(m.getEntranceTime()).matches("31")) {
+//                    System.out.println(sdfDay.format(m.getEntranceTime()));
+//                    counter31++;
+//                }
+//            }
+//        }
+//    }
 
+    
 }

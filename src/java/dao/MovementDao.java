@@ -1,5 +1,6 @@
 package dao;
 
+import domain.Device;
 import domain.EMovementStatus;
 import domain.Lecturer;
 import domain.Movement;
@@ -94,4 +95,44 @@ public class MovementDao extends GenericDao<Movement> {
         s.close();
         return list;
     }
+    
+    public Long findTotalByUniversityAndMovementStatusAndDateAndDeviceType(University x, EMovementStatus y, Date from, Date to, String type) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery
+        ("SELECT COUNT(a.movementId) FROM Movement a WHERE a.university = :x AND a.device.deviceType = :type AND a.movementStatus = :y "
+                + "AND a.entranceTime BETWEEN :from AND :to ");
+        q.setParameter("x", x);
+        q.setParameter("y", y);
+        q.setParameter("from", from);
+        q.setParameter("to", to);
+        q.setParameter("type", type);
+        Long list = (Long) q.uniqueResult();
+        s.close();
+        return list;
+    }
+    
+    public Long findTotalByUniversityAndMovementStatusAndDate(University x, EMovementStatus y, Date from, Date to) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery
+        ("SELECT COUNT(a.movementId) FROM Movement a WHERE a.university = :x AND a.movementStatus = :y "
+                + "AND a.entranceTime BETWEEN :from AND :to ");
+        q.setParameter("x", x);
+        q.setParameter("y", y);
+        q.setParameter("from", from);
+        q.setParameter("to", to);
+        Long list = (Long) q.uniqueResult();
+        s.close();
+        return list;
+    }
+    
+    public Movement findByDeviceAndStatus(Device d,EMovementStatus x) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Movement a WHERE a.device = :d AND a.movementStatus = :stat");
+        q.setParameter("d", d);
+        q.setParameter("stat", x);
+        Movement list = (Movement) q.uniqueResult();
+        s.close();
+        return list;
+    }
+
 }

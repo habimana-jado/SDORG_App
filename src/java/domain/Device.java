@@ -43,11 +43,11 @@ public class Device implements Serializable, Auditable{
     private Person updatedBy;
    
     
-    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "device")
     @Fetch(FetchMode.SUBSELECT)
     private List<Movement> movement;
     
-    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "device")
     @Fetch(FetchMode.SUBSELECT)
     private List<DeviceImage> deviceImage;
     

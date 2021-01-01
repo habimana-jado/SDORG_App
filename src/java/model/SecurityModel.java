@@ -283,14 +283,32 @@ public class SecurityModel {
         chosenDevice.setMovementStatus(EMovementStatus.CHECKED_IN);
         new DeviceDao().update(chosenDevice);
 
-        visitorDevices = new DeviceImageDao().findByPerson(chosenPerson);
+//        visitorDevices = new DeviceImageDao().findByPerson(chosenPerson);
         universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
 
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Device Checked-In"));
     }
 
-    public void checkOutDevice(Movement movement) {
+//    public void checkOutDevice(Movement movement) {
+//        movement.setExitTime(new Date());
+//        movement.setMovementStatus(EMovementStatus.CHECKED_OUT);
+//        movement.setDateUpdated(new Date());
+//        movement.setUpdatedBy(loggedInUser.getStaff());
+//        new MovementDao().update(movement);
+//
+//        Device device = movement.getDevice();
+//        device.setMovementStatus(EMovementStatus.CHECKED_OUT);
+//        new DeviceDao().update(device);
+//        universityDevices = new MovementDao().findByUniversity(loggedInUser.getStaff().getUniversity(), EMovementStatus.CHECKED_IN);
+//
+//        FacesContext fc = FacesContext.getCurrentInstance();
+//        fc.addMessage(null, new FacesMessage("Device Checked-Out"));
+//    }
+    
+    public void checkOutDevice() {
+        Movement movement = new MovementDao().findByDeviceAndStatus(chosenDevice, EMovementStatus.CHECKED_IN);
+        
         movement.setExitTime(new Date());
         movement.setMovementStatus(EMovementStatus.CHECKED_OUT);
         movement.setDateUpdated(new Date());

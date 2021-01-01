@@ -272,7 +272,7 @@
                                         <c:choose>
                                             <c:when test="#{securityModel.alertMessageCheckout eq 'This device is free to exit'}">
                                                 <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                                                    <h:commandButton value="Check-Out" action="#{securityModel.checkInDeviceByRFID()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
+                                                    <h:commandButton value="Check-Out" action="#{securityModel.checkOutDevice()}" class="btn btn-primary m-t-15 waves-effect"></h:commandButton>
                                                 </div>
                                             </c:when>
                                         </c:choose>

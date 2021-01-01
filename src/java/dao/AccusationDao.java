@@ -3,12 +3,12 @@ package dao;
 
 import domain.Accusation;
 import domain.Device;
-import domain.EMovementStatus;
 import domain.Lecturer;
 import domain.Security;
 import domain.Staff;
 import domain.Student;
 import domain.University;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -60,9 +60,40 @@ public class AccusationDao extends GenericDao<Accusation>{
         return u;
     }
     
+    public Long findTotalByUniversityAndMovementStatusAndDateAndDeviceType(University x, String status, Date from, Date to, String type){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery(
+                "SELECT COUNT(a.accusationId) FROM Accusation a WHERE a.movement.university = :x AND a.movement.device.deviceType = :type AND"
+                        + " a.status = :y AND a.reportingPeriod BETWEEN :from AND :to");
+        q.setParameter("x", x);
+        q.setParameter("y", status);
+        q.setParameter("from", from);
+        q.setParameter("to", to);
+        q.setParameter("type", type);
+        Long list = (Long) q.uniqueResult();
+        s.close();
+        return list;
+    }
+    
+    public Long findTotalByUniversityAndMovementStatusAndDate(University x, String status, Date from, Date to){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery(
+                "SELECT COUNT(a.accusationId) FROM Accusation a WHERE a.movement.university = :x"
+                        + " AND a.status = :y AND a.reportingPeriod BETWEEN :from AND :to");
+        q.setParameter("x", x);
+        q.setParameter("y", status);
+        q.setParameter("from", from);
+        q.setParameter("to", to);
+        Long list = (Long) q.uniqueResult();
+        s.close();
+        return list;
+    }
+    
     public Long findTotalByUniversityAndMovementStatus(University x, String status){
         Session s = HibernateUtil.getSessionFactory().openSession();
-        Query q = s.createQuery("SELECT COUNT(a.accusationId) FROM Accusation a WHERE a.movement.university = :x AND a.status = :y");
+        Query q = s.createQuery(
+                "SELECT COUNT(a.accusationId) FROM Accusation a WHERE a.movement.university = :x"
+                        + " AND a.status = :y ");
         q.setParameter("x", x);
         q.setParameter("y", status);
         Long list = (Long) q.uniqueResult();
